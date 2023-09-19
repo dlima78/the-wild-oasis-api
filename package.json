@@ -2,6 +2,8 @@
   "name": "server",
   "packageManager": "yarn@3.6.3",
   "devDependencies": {
-    "git-commit-msg-linter": "^5.0.4"
+    "@types/node": "^20.6.2",
+    "git-commit-msg-linter": "^5.0.4",
+    "typescript": "^5.2.2"
   }
 }

@@ -11,7 +11,14 @@ const mockRequest = (): AddCabinController.Request => ({
 })
 
 export class AddCabinSpy implements AddCabin {
-  params!: AddCabin.Params
+  params: AddCabin.Params = {
+    name: '',
+    maxCapacity: 0,
+    regularPrice: 0,
+    discount: 0,
+    description: ''
+  }
+
   async add (data: AddCabin.Params): Promise<void> {
     this.params = data
   }

@@ -1,5 +1,6 @@
 import { type AddCabin } from '@/domain/usecases/add-cabin'
 import { AddCabinController } from '@/presentation/controllers'
+import { noContent } from '@/presentation/helpers'
 import { faker } from '@faker-js/faker'
 
 const mockRequest = (): AddCabinController.Request => ({
@@ -49,9 +50,6 @@ describe('Add Cabin Controller', () => {
   test('should return 204 on success', async () => {
     const { sut } = makeSut()
     const HttpResponse = await sut.handle(mockRequest())
-    expect(HttpResponse).toEqual({
-      statusCode: 204,
-      body: null
-    })
+    expect(HttpResponse).toEqual(noContent())
   })
 })

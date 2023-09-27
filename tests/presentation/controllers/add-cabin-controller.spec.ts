@@ -1,6 +1,7 @@
 import { type AddCabin } from '@/domain/usecases/add-cabin'
 import { AddCabinController } from '@/presentation/controllers'
 import { noContent } from '@/presentation/helpers'
+import { ValidationSpy } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
 
 const mockRequest = (): AddCabinController.Request => ({
@@ -28,14 +29,17 @@ export class AddCabinSpy implements AddCabin {
 interface SutTypes {
   sut: AddCabinController
   addCabinSpy: AddCabinSpy
+  validationSpy: ValidationSpy
 }
 
 const makeSut = (): SutTypes => {
+  const validationSpy = new ValidationSpy()
   const addCabinSpy = new AddCabinSpy()
-  const sut = new AddCabinController(addCabinSpy)
+  const sut = new AddCabinController(addCabinSpy, validationSpy)
   return {
     sut,
-    addCabinSpy
+    addCabinSpy,
+    validationSpy
   }
 }
 
@@ -51,5 +55,12 @@ describe('Add Cabin Controller', () => {
     const { sut } = makeSut()
     const HttpResponse = await sut.handle(mockRequest())
     expect(HttpResponse).toEqual(noContent())
+  })
+
+  test('should call Validation with correct value', async () => {
+    const { sut, validationSpy } = makeSut()
+    const request = mockRequest()
+    await sut.handle(request)
+    expect(validationSpy.input).toEqual(request)
   })
 })

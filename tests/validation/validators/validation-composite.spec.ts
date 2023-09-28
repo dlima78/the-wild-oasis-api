@@ -29,4 +29,11 @@ describe('Validation Composite', () => {
     const error = sut.validate({ [field]: faker.lorem.word() })
     expect(error).toEqual(validationSpies[1].error)
   })
+  test('should return first error if more than one validation fails', () => {
+    const { sut, validationSpies } = makeSut()
+    validationSpies[0].error = new Error()
+    validationSpies[1].error = new MissingParamError(field)
+    const error = sut.validate({ [field]: faker.lorem.word() })
+    expect(error).toEqual(validationSpies[0].error)
+  })
 })

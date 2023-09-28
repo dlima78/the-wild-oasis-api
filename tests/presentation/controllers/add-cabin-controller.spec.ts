@@ -1,6 +1,6 @@
 import { type AddCabin } from '@/domain/usecases/add-cabin'
 import { AddCabinController } from '@/presentation/controllers'
-import { noContent } from '@/presentation/helpers'
+import { badRequest, noContent } from '@/presentation/helpers'
 import { ValidationSpy } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
 
@@ -55,6 +55,13 @@ describe('Add Cabin Controller', () => {
     const { sut } = makeSut()
     const HttpResponse = await sut.handle(mockRequest())
     expect(HttpResponse).toEqual(noContent())
+  })
+
+  test('should return 400 if Validation returns an error', async () => {
+    const { sut, validationSpy } = makeSut()
+    const error = validationSpy.error = new Error()
+    const HttpResponse = await sut.handle(mockRequest())
+    expect(HttpResponse).toEqual(badRequest(error))
   })
 
   test('should call Validation with correct value', async () => {

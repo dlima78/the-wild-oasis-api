@@ -1,4 +1,5 @@
 {
   "editor.formatOnSave": true,
-  "standard.engine": "ts-standard"
+  "standard.engine": "ts-standard",
+  "vscode-graphql-execution.debug": false
 }

@@ -1,4 +1,4 @@
-import { DbAddCabin } from '@/data/db'
+import { DbAddCabin } from '@/data/usecases'
 import { type AddCabinRepository } from '@/data/protocols'
 import { mockAddCabinParams } from '@/tests/domain/mocks'
 
@@ -40,7 +40,9 @@ describe('DbAddCAbin', () => {
 
   test('should throw if AddCabinRepository throws', async () => {
     const { sut, addCabinRepositorySpy } = makeSut()
-    jest.spyOn(addCabinRepositorySpy, 'add').mockImplementationOnce(() => { throw new Error() })
+    jest.spyOn(addCabinRepositorySpy, 'add').mockImplementationOnce(() => {
+      throw new Error()
+    })
     const promise = sut.add(mockAddCabinParams())
     await expect(promise).rejects.toThrow()
   })

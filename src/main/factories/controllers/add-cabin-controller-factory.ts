@@ -1,6 +1,6 @@
 import { AddCabinController } from '@/presentation/controllers'
 import { type Controller } from '@/presentation/protocols'
-import { DbAddCabin } from '@/data/db'
+import { DbAddCabin } from '@/data/usecases'
 import { CabinMongoRepository } from '@/infra/db'
 import { makeAddCabinValidation } from '@/main/factories'
 

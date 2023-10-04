@@ -33,4 +33,10 @@ describe('LogController Decorator', () => {
     await sut.handle(request)
     expect(controllerSpy.request).toEqual(request)
   })
+
+  test('should return the same result of controller', async () => {
+    const { sut, controllerSpy } = makeSut()
+    const httpResponse = await sut.handle(faker.lorem.sentence())
+    expect(httpResponse).toEqual(controllerSpy.httpResponse)
+  })
 })

@@ -19,7 +19,7 @@ describe('Cabin', () => {
     cabinCollection = MongoHelper.getCollection('cabins')
     await cabinCollection.deleteMany({})
   })
-  test('should ', async () => {
+  test('should return 204 on add cabin', async () => {
     await request(app)
       .post('/api/cabin')
       .send({
@@ -27,7 +27,7 @@ describe('Cabin', () => {
         maxCapacity: 4,
         regularPrice: 30,
         discount: 5,
-        description: ''
+        description: 'A Cabin'
       })
       .expect(204)
   })

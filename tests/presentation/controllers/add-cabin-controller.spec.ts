@@ -1,6 +1,6 @@
 import { type AddCabin } from '@/domain/usecases/add-cabin'
 import { AddCabinController } from '@/presentation/controllers'
-import { badRequest, noContent } from '@/presentation/helpers'
+import { badRequest, noContent, serverError } from '@/presentation/helpers'
 import { ValidationSpy } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
 
@@ -53,15 +53,15 @@ describe('Add Cabin Controller', () => {
 
   test('should return 204 on success', async () => {
     const { sut } = makeSut()
-    const HttpResponse = await sut.handle(mockRequest())
-    expect(HttpResponse).toEqual(noContent())
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(noContent())
   })
 
   test('should return 400 if Validation returns an error', async () => {
     const { sut, validationSpy } = makeSut()
-    const error = validationSpy.error = new Error()
-    const HttpResponse = await sut.handle(mockRequest())
-    expect(HttpResponse).toEqual(badRequest(error))
+    const error = (validationSpy.error = new Error())
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(badRequest(error))
   })
 
   test('should call Validation with correct value', async () => {
@@ -69,5 +69,14 @@ describe('Add Cabin Controller', () => {
     const request = mockRequest()
     await sut.handle(request)
     expect(validationSpy.input).toEqual(request)
+  })
+
+  test('should return 500 if AddCabin throws', async () => {
+    const { sut, addCabinSpy } = makeSut()
+    jest.spyOn(addCabinSpy, 'add').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })

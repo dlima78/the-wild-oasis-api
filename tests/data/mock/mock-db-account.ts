@@ -5,6 +5,6 @@ export class AddAccountRepositorySpy implements AddAccountRepository {
   result = true
   async add (params: AddAccountRepository.Params): Promise<boolean> {
     this.params = params
-    return true
+    return this.result
   }
 }

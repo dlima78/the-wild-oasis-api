@@ -17,10 +17,19 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbAddAccount Usecase', () => {
-  test('Should call hasher with correct plaintext', async () => {
+  test('Should call Hasher with correct plaintext', async () => {
     const { sut, hasherSpy } = makeSut()
     const addAccountParams = mockAddAccountParams()
     await sut.add(addAccountParams)
     expect(hasherSpy.plaintext).toEqual(addAccountParams.password)
+  })
+
+  test('Should throw if Hasher throws', async () => {
+    const { sut, hasherSpy } = makeSut()
+    jest.spyOn(hasherSpy, 'hash').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.add(mockAddAccountParams())
+    await expect(promise).rejects.toThrow()
   })
 })

@@ -1,16 +1,20 @@
 import { DbAddAccount } from '@/data/usecases'
 import { HasherSpy } from '@/tests/data/mock/mock-cryptography'
 import { mockAddAccountParams } from '@/tests/domain/mocks'
+import { AddAccountRepositorySpy } from '@/tests/data/mock'
 
 type SutTypes = {
+  addAccountRepositorySpy: AddAccountRepositorySpy
   hasherSpy: HasherSpy
   sut: DbAddAccount
 }
 
 const makeSut = (): SutTypes => {
   const hasherSpy = new HasherSpy()
-  const sut = new DbAddAccount(hasherSpy)
+  const addAccountRepositorySpy = new AddAccountRepositorySpy()
+  const sut = new DbAddAccount(hasherSpy, addAccountRepositorySpy)
   return {
+    addAccountRepositorySpy,
     hasherSpy,
     sut
   }
@@ -31,5 +35,16 @@ describe('DbAddAccount Usecase', () => {
     })
     const promise = sut.add(mockAddAccountParams())
     await expect(promise).rejects.toThrow()
+  })
+
+  test('should call AddAccountRepository with correct values', async () => {
+    const { sut, addAccountRepositorySpy, hasherSpy } = makeSut()
+    const addAccountParams = mockAddAccountParams()
+    await sut.add(addAccountParams)
+    expect(addAccountRepositorySpy.params).toEqual({
+      name: addAccountParams.name,
+      email: addAccountParams.email,
+      password: hasherSpy.digest
+    })
   })
 })

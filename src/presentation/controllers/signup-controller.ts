@@ -4,6 +4,7 @@ import {
   type Controller,
   type HttpResponse
 } from '@/presentation/protocols'
+import { badRequest } from '@/presentation/helpers'
 
 export class SignupController implements Controller {
   constructor (
@@ -12,7 +13,10 @@ export class SignupController implements Controller {
   ) {}
 
   async handle (request: SignupController.Request): Promise<HttpResponse> {
-    this.validation.validate(request)
+    const error = this.validation.validate(request)
+    if (error) {
+      return badRequest(error)
+    }
     await this.addAccount.add({ ...request })
     return {
       statusCode: 400,

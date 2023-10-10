@@ -1,9 +1,18 @@
 import { type AddAccount } from '@/domain/usecases'
-import { type Controller, type HttpResponse } from '@/presentation/protocols'
+import {
+  type Validation,
+  type Controller,
+  type HttpResponse
+} from '@/presentation/protocols'
 
 export class SignupController implements Controller {
-  constructor (private readonly addAccount: AddAccount) {}
+  constructor (
+    private readonly addAccount: AddAccount,
+    private readonly validation: Validation
+  ) {}
+
   async handle (request: SignupController.Request): Promise<HttpResponse> {
+    this.validation.validate(request)
     await this.addAccount.add({ ...request })
     return {
       statusCode: 400,

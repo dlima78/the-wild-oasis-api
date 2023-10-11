@@ -1,8 +1,8 @@
 import { SignupController } from '@/presentation/controllers'
 import { AddAccountSpy, ValidationSpy } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
-import { MissingParamError } from '@/presentation/errors'
-import { badRequest } from '@/presentation/helpers'
+import { MissingParamError, ServerError } from '@/presentation/errors'
+import { badRequest, serverError } from '@/presentation/helpers'
 
 type SutTypes = {
   validationSpy: ValidationSpy
@@ -49,6 +49,15 @@ describe('Signup Controller', () => {
     const request = mockRequest()
     await sut.handle(request)
     expect(validationSpy.input).toEqual(request)
+  })
+
+  test('should return 500 if AddAccount throws', async () => {
+    const { sut, addAccountSpy } = makeSut()
+    jest.spyOn(addAccountSpy, 'add').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(serverError(new ServerError('')))
   })
 
   test('should return 400 if Validation returns an error', async () => {

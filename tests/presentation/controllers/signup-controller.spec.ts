@@ -6,7 +6,7 @@ import {
 } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
 import { MissingParamError, ServerError } from '@/presentation/errors'
-import { badRequest, serverError } from '@/presentation/helpers'
+import { badRequest, serverError, ok } from '@/presentation/helpers'
 
 type SutTypes = {
   authenticationSpy: AuthenticationSpy
@@ -85,6 +85,12 @@ describe('Signup Controller', () => {
       email: request.email,
       password: request.password
     })
+  })
+
+  test('should return 200 if valid data is provided', async () => {
+    const { sut, authenticationSpy } = makeSut()
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(ok(authenticationSpy.result))
   })
 
   test('Should return 500 if Authentication throws', async () => {

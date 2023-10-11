@@ -10,7 +10,10 @@ export class DbAuthentication implements Authentication {
     authenticationParams: Authentication.Params
   ): Promise<Authentication.Result> {
     const { email } = authenticationParams
-    await this.loadAccountByEmailRepository.loadByEmail(email)
+    const account = await this.loadAccountByEmailRepository.loadByEmail(email)
+    if (!account) {
+      return null
+    }
     return {
       accessToken: '',
       name: ''

@@ -7,5 +7,5 @@ export namespace LoadAccoutByEmailRepository {
     id: string
     name: string
     password: string
-  }
+  } | null
 }

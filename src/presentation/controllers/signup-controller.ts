@@ -6,11 +6,13 @@ import {
 } from '@/presentation/protocols'
 import { badRequest, serverError } from '@/presentation/helpers'
 import { ServerError } from '../errors'
+import { type Authentication } from '@/data/usecases'
 
 export class SignupController implements Controller {
   constructor (
     private readonly addAccount: AddAccount,
-    private readonly validation: Validation
+    private readonly validation: Validation,
+    private readonly authentication: Authentication
   ) {}
 
   async handle (request: SignupController.Request): Promise<HttpResponse> {
@@ -19,7 +21,12 @@ export class SignupController implements Controller {
       if (error) {
         return badRequest(error)
       }
-      await this.addAccount.add({ ...request })
+      const { name, email, password } = request
+      await this.addAccount.add({ name, email, password })
+      await this.authentication.auth({
+        email,
+        password
+      })
       return {
         statusCode: 400,
         body: null

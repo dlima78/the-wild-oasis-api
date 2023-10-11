@@ -4,8 +4,8 @@ import {
   type Controller,
   type HttpResponse
 } from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/presentation/helpers'
-import { ServerError } from '../errors'
+import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers'
+import { EmailInUseError, ServerError } from '@/presentation/errors'
 import { type Authentication } from '@/data/usecases'
 
 export class SignupController implements Controller {
@@ -22,7 +22,10 @@ export class SignupController implements Controller {
         return badRequest(error)
       }
       const { name, email, password } = request
-      await this.addAccount.add({ name, email, password })
+      const isValid = await this.addAccount.add({ name, email, password })
+      if (!isValid) {
+        return forbidden(new EmailInUseError())
+      }
       const authenticationModel = await this.authentication.auth({
         email,
         password

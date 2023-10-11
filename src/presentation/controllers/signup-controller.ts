@@ -4,7 +4,7 @@ import {
   type Controller,
   type HttpResponse
 } from '@/presentation/protocols'
-import { badRequest, serverError } from '@/presentation/helpers'
+import { badRequest, ok, serverError } from '@/presentation/helpers'
 import { ServerError } from '../errors'
 import { type Authentication } from '@/data/usecases'
 
@@ -23,14 +23,11 @@ export class SignupController implements Controller {
       }
       const { name, email, password } = request
       await this.addAccount.add({ name, email, password })
-      await this.authentication.auth({
+      const authenticationModel = await this.authentication.auth({
         email,
         password
       })
-      return {
-        statusCode: 400,
-        body: null
-      }
+      return ok(authenticationModel)
     } catch (error) {
       return serverError(new ServerError(error as string))
     }

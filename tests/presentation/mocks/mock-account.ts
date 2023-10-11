@@ -1,5 +1,4 @@
-import { type Authentication } from '@/data/usecases'
-import { type AddAccount } from '@/domain/usecases'
+import { type AddAccount, type Authentication } from '@/domain/usecases'
 import { faker } from '@faker-js/faker'
 
 export class AddAccountSpy implements AddAccount {

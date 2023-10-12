@@ -17,7 +17,7 @@ export class AddAccountRepositorySpy implements AddAccountRepository {
 export class CheckAccountByEmailRepositorySpy
 implements CheckAccountByEmailRepository {
   email = ''
-  result = true
+  result = false
 
   async checkByEmail (
     email: string

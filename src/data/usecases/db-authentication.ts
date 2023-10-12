@@ -16,7 +16,11 @@ export class DbAuthentication implements Authentication {
     const { email } = authenticationParams
     const account = await this.loadAccountByEmailRepository.loadByEmail(email)
     if (account) {
-      await this.encrypter.encrypt(account.id)
+      const accessToken = await this.encrypter.encrypt(account.id)
+      return {
+        accessToken,
+        name: account.name
+      }
     }
     return null
   }

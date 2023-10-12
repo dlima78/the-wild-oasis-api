@@ -1,5 +1,6 @@
 import { type Authentication } from '@/domain/usecases'
 import {
+  type UpdateAccessTokenRepository,
   type Encrypter,
   type LoadAccoutByEmailRepository
 } from '@/data/protocols'
@@ -7,7 +8,8 @@ import {
 export class DbAuthentication implements Authentication {
   constructor (
     private readonly loadAccountByEmailRepository: LoadAccoutByEmailRepository,
-    private readonly encrypter: Encrypter
+    private readonly encrypter: Encrypter,
+    private readonly updateAccessTokenRepository: UpdateAccessTokenRepository
   ) {}
 
   async auth (
@@ -17,6 +19,10 @@ export class DbAuthentication implements Authentication {
     const account = await this.loadAccountByEmailRepository.loadByEmail(email)
     if (account) {
       const accessToken = await this.encrypter.encrypt(account.id)
+      await this.updateAccessTokenRepository.updateAccessToken(
+        account.id,
+        accessToken
+      )
       return {
         accessToken,
         name: account.name

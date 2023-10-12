@@ -1,6 +1,7 @@
 import {
   type CheckAccountByEmailRepository,
-  type AddAccountRepository
+  type AddAccountRepository,
+  type UpdateAccessTokenRepository
 } from '@/data/protocols'
 import { type LoadAccoutByEmailRepository } from '../protocols/db/account/load-account-by-email-repository'
 import { faker } from '@faker-js/faker'
@@ -41,5 +42,15 @@ implements LoadAccoutByEmailRepository {
   ): Promise<LoadAccoutByEmailRepository.Result> {
     this.email = email
     return this.result
+  }
+}
+
+export class UpdateAccessTokenRepositorySpy
+implements UpdateAccessTokenRepository {
+  id = ''
+  token = ''
+  async updateAccessToken (id: string, token: string): Promise<void> {
+    this.id = id
+    this.token = token
   }
 }

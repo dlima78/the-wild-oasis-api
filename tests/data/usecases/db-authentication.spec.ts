@@ -1,21 +1,29 @@
 import { DbAuthentication } from '@/data/usecases'
-import { EncrypterSpy, LoadAccoutByEmailRepositorySpy } from '@/tests/data/mock'
+import {
+  EncrypterSpy,
+  LoadAccoutByEmailRepositorySpy,
+  UpdateAccessTokenRepositorySpy
+} from '@/tests/data/mock'
 import { mockAuthenticationParams } from '@/tests/domain/mocks'
 
 type SutTypes = {
+  updateAccessTokenRepositorySpy: UpdateAccessTokenRepositorySpy
   loadAccountByEmailRepositorySpy: LoadAccoutByEmailRepositorySpy
   encrypterSpy: EncrypterSpy
   sut: DbAuthentication
 }
 
 const makeSut = (): SutTypes => {
+  const updateAccessTokenRepositorySpy = new UpdateAccessTokenRepositorySpy()
   const loadAccountByEmailRepositorySpy = new LoadAccoutByEmailRepositorySpy()
   const encrypterSpy = new EncrypterSpy()
   const sut = new DbAuthentication(
     loadAccountByEmailRepositorySpy,
-    encrypterSpy
+    encrypterSpy,
+    updateAccessTokenRepositorySpy
   )
   return {
+    updateAccessTokenRepositorySpy,
     encrypterSpy,
     loadAccountByEmailRepositorySpy,
     sut
@@ -72,5 +80,19 @@ describe('DbAuthentication Usecase', () => {
     const data = await sut.auth(mockAuthenticationParams())
     expect(data?.accessToken).toBe(encrypterSpy.ciphertext)
     expect(data?.name).toBe(loadAccountByEmailRepositorySpy.result?.name)
+  })
+
+  test('should calls UpdateAccessTokenRepository with correct values', async () => {
+    const {
+      sut,
+      encrypterSpy,
+      loadAccountByEmailRepositorySpy,
+      updateAccessTokenRepositorySpy
+    } = makeSut()
+    await sut.auth(mockAuthenticationParams())
+    expect(updateAccessTokenRepositorySpy.id).toBe(
+      loadAccountByEmailRepositorySpy.result?.id
+    )
+    expect(updateAccessTokenRepositorySpy.token).toBe(encrypterSpy.ciphertext)
   })
 })

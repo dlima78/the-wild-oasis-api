@@ -14,7 +14,7 @@ export class AddAccountRepositorySpy implements AddAccountRepository {
 export class LoadAccoutByEmailRepositorySpy
 implements LoadAccoutByEmailRepository {
   email: string | undefined
-  result: LoadAccoutByEmailRepository.Result | null = {
+  result: LoadAccoutByEmailRepository.Result = {
     id: faker.string.uuid(),
     name: faker.person.fullName(),
     password: faker.internet.password()

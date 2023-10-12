@@ -1,4 +1,7 @@
-import { type AddAccountRepository } from '@/data/protocols'
+import {
+  type CheckAccountByEmailRepository,
+  type AddAccountRepository
+} from '@/data/protocols'
 import { type LoadAccoutByEmailRepository } from '../protocols/db/account/load-account-by-email-repository'
 import { faker } from '@faker-js/faker'
 
@@ -7,6 +10,19 @@ export class AddAccountRepositorySpy implements AddAccountRepository {
   result = true
   async add (params: AddAccountRepository.Params): Promise<boolean> {
     this.params = params
+    return this.result
+  }
+}
+
+export class CheckAccountByEmailRepositorySpy
+implements CheckAccountByEmailRepository {
+  email = ''
+  result = true
+
+  async checkByEmail (
+    email: string
+  ): Promise<CheckAccountByEmailRepository.Result> {
+    this.email = email
     return this.result
   }
 }

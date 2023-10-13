@@ -29,4 +29,14 @@ describe('AccountMongoReporitory', () => {
       expect(isValid).toBe(true)
     })
   })
+
+  describe('checkByEmail()', () => {
+    test('should return true if email is valid', async () => {
+      const sut = makeSut()
+      const addAccountParams = mockAddAccountParams()
+      await accountCollection.insertOne(addAccountParams)
+      const exists = await sut.checkByEmail(addAccountParams.email)
+      expect(exists).toBe(true)
+    })
+  })
 })

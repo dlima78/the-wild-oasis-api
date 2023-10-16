@@ -18,4 +18,14 @@ describe('CompareFields Validation', () => {
     })
     expect(error).toEqual(new InvalidParamError(fieldToCompare))
   })
+
+  test('should return null if validation succeeds', () => {
+    const sut = makeSut()
+    const value = faker.lorem.word()
+    const error = sut.validate({
+      [field]: value,
+      [fieldToCompare]: value
+    })
+    expect(error).toBeFalsy()
+  })
 })

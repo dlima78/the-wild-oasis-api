@@ -31,6 +31,20 @@ describe('AccountMongoReporitory', () => {
     })
   })
 
+  describe('LoadByEmail()', () => {
+    test('should return an account on success', async () => {
+      const sut = makeSut()
+      const addAccountParams = mockAddAccountParams()
+      await accountCollection.insertOne(addAccountParams)
+      const account = await sut.loadByEmail(addAccountParams.email)
+      if (account) {
+        expect(account).toBeTruthy()
+        expect(account.name).toBe(addAccountParams.name)
+        expect(account.password).toBe(addAccountParams.password)
+      }
+    })
+  })
+
   describe('checkByEmail()', () => {
     test('should return true if email is valid', async () => {
       const sut = makeSut()

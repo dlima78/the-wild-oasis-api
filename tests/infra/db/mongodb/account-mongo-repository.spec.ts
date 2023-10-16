@@ -43,6 +43,12 @@ describe('AccountMongoReporitory', () => {
         expect(account.password).toBe(addAccountParams.password)
       }
     })
+
+    test('should return null if loadByEmail fails', async () => {
+      const sut = makeSut()
+      const account = await sut.loadByEmail(faker.internet.email())
+      expect(account).toBeFalsy()
+    })
   })
 
   describe('checkByEmail()', () => {

@@ -1,5 +1,6 @@
 import { AccountMongoRepository, MongoHelper } from '@/infra/db'
 import { mockAddAccountParams } from '@/tests/domain/mocks'
+import { faker } from '@faker-js/faker'
 import { type Collection } from 'mongodb'
 
 let accountCollection: Collection
@@ -37,6 +38,28 @@ describe('AccountMongoReporitory', () => {
       await accountCollection.insertOne(addAccountParams)
       const exists = await sut.checkByEmail(addAccountParams.email)
       expect(exists).toBe(true)
+    })
+  })
+
+  describe('updateAccessToken()', () => {
+    test('Should update the account accessToken on success', async () => {
+      const sut = makeSut()
+      const res = await accountCollection.insertOne(mockAddAccountParams())
+      const fakeAccount = await accountCollection.findOne({
+        _id: res.insertedId
+      })
+      if (fakeAccount) {
+        expect(fakeAccount.accessToken).toBeFalsy()
+        const accessToken = faker.string.uuid()
+        await sut.updateAccessToken(fakeAccount._id.toString(), accessToken)
+        const account = await accountCollection.findOne({
+          _id: fakeAccount._id
+        })
+        if (account) {
+          expect(account).toBeTruthy()
+          expect(account.accessToken).toBe(accessToken)
+        }
+      }
     })
   })
 })

@@ -22,7 +22,7 @@ implements
   async loadByEmail (
     email: string
   ): Promise<LoadAccoutByEmailRepository.Result> {
-    const accountCollection = MongoHelper.getCollection('account')
+    const accountCollection = MongoHelper.getCollection('accounts')
     const account = await accountCollection.findOne(
       { email },
       {

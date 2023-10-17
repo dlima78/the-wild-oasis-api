@@ -2,14 +2,16 @@ import { type Authentication } from '@/domain/usecases'
 import {
   type UpdateAccessTokenRepository,
   type Encrypter,
-  type LoadAccoutByEmailRepository
+  type LoadAccoutByEmailRepository,
+  type HashComparer
 } from '@/data/protocols'
 
 export class DbAuthentication implements Authentication {
   constructor (
     private readonly loadAccountByEmailRepository: LoadAccoutByEmailRepository,
     private readonly encrypter: Encrypter,
-    private readonly updateAccessTokenRepository: UpdateAccessTokenRepository
+    private readonly updateAccessTokenRepository: UpdateAccessTokenRepository,
+    private readonly hashComparer: HashComparer
   ) {}
 
   async auth (
@@ -18,6 +20,10 @@ export class DbAuthentication implements Authentication {
     const { email } = authenticationParams
     const account = await this.loadAccountByEmailRepository.loadByEmail(email)
     if (account) {
+      await this.hashComparer.compare(
+        authenticationParams.password,
+        account.password
+      )
       const accessToken = await this.encrypter.encrypt(account.id)
       await this.updateAccessTokenRepository.updateAccessToken(
         account.id,

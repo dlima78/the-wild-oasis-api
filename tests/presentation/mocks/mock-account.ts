@@ -1,5 +1,4 @@
 import { type AddAccount, type Authentication } from '@/domain/usecases'
-import { faker } from '@faker-js/faker'
 
 export class AddAccountSpy implements AddAccount {
   params: AddAccount.Params | undefined
@@ -12,10 +11,7 @@ export class AddAccountSpy implements AddAccount {
 
 export class AuthenticationSpy implements Authentication {
   params: Authentication.Params | undefined
-  result = {
-    accessToken: faker.string.uuid(),
-    name: faker.person.fullName()
-  }
+  result!: Authentication.Result | null
 
   async auth (
     authenticationParams: Authentication.Params

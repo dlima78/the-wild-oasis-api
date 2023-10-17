@@ -1,7 +1,12 @@
 import { LoginController } from '@/presentation/controllers'
 import { AuthenticationSpy, ValidationSpy } from '@/tests/presentation/mocks'
 import { MissingParamError } from '@/presentation/errors'
-import { badRequest, ok, unauthorized } from '@/presentation/helpers'
+import {
+  badRequest,
+  ok,
+  serverError,
+  unauthorized
+} from '@/presentation/helpers'
 
 import { faker } from '@faker-js/faker'
 
@@ -62,5 +67,14 @@ describe('Login Controller', () => {
     const { sut, authenticationSpy } = makeSut()
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(ok(authenticationSpy.result))
+  })
+
+  test('should returns 500 if Authentication throws', async () => {
+    const { sut, authenticationSpy } = makeSut()
+    jest.spyOn(authenticationSpy, 'auth').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })

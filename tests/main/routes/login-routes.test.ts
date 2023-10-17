@@ -1,5 +1,6 @@
 import { MongoHelper } from '@/infra/db'
 import app from '@/main/config/app'
+import { hash } from 'bcrypt'
 
 import { type Collection } from 'mongodb'
 import request from 'supertest'
@@ -40,6 +41,23 @@ describe('Login Routes', () => {
           passwordConfirmation: '123'
         })
         .expect(403)
+    })
+  })
+  describe('POST/login', () => {
+    test('should return 200 on login', async () => {
+      const password = await hash('123', 12)
+      await accountCollection.insertOne({
+        name: 'Eduardo',
+        email: 'eduardo@mail.com',
+        password
+      })
+      await request(app)
+        .post('/api/login')
+        .send({
+          email: 'eduardo@mail.com',
+          password: '123'
+        })
+        .expect(200)
     })
   })
 })

@@ -1,7 +1,7 @@
 import { LoginController } from '@/presentation/controllers'
 import { AuthenticationSpy, ValidationSpy } from '@/tests/presentation/mocks'
 import { MissingParamError } from '@/presentation/errors'
-import { badRequest, unauthorized } from '@/presentation/helpers'
+import { badRequest, ok, unauthorized } from '@/presentation/helpers'
 
 import { faker } from '@faker-js/faker'
 
@@ -56,5 +56,11 @@ describe('Login Controller', () => {
     authenticationSpy.result = null
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(unauthorized())
+  })
+
+  test('should return 200 if authentication succeeds', async () => {
+    const { sut, authenticationSpy } = makeSut()
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(ok(authenticationSpy.result))
   })
 })

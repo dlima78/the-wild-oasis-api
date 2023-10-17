@@ -1,4 +1,5 @@
 import { type AddAccount, type Authentication } from '@/domain/usecases'
+import { faker } from '@faker-js/faker'
 
 export class AddAccountSpy implements AddAccount {
   params: AddAccount.Params | undefined
@@ -11,12 +12,13 @@ export class AddAccountSpy implements AddAccount {
 
 export class AuthenticationSpy implements Authentication {
   params: Authentication.Params | undefined
-  result!: Authentication.Result | null
+  result: null | Authentication.Result = {
+    accessToken: faker.string.uuid(),
+    name: faker.person.firstName()
+  }
 
-  async auth (
-    authenticationParams: Authentication.Params
-  ): Promise<Authentication.Result> {
-    this.params = authenticationParams
+  async auth (params: Authentication.Params): Promise<Authentication.Result> {
+    this.params = params
     return this.result
   }
 }

@@ -73,6 +73,15 @@ describe('DbAuthentication Usecase', () => {
     )
   })
 
+  test('should throws if HashComparer throws', async () => {
+    const { sut, hashComparerSpy } = makeSut()
+    jest.spyOn(hashComparerSpy, 'compare').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.auth(mockAuthenticationParams())
+    await expect(promise).rejects.toThrow()
+  })
+
   test('should call Encrypter with correct plaintext', async () => {
     const { sut, encrypterSpy, loadAccountByEmailRepositorySpy } = makeSut()
     await sut.auth(mockAuthenticationParams())

@@ -24,9 +24,7 @@ export class DbLoadAccountByToken implements LoadAccountByTokenRepository {
         role
       )
       if (account) {
-        return {
-          id: ''
-        }
+        return account
       }
     }
     return null

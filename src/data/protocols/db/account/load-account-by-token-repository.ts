@@ -8,5 +8,5 @@ export interface LoadAccountByTokenRepository {
 export namespace LoadAccountByTokenRepository {
   export type Result = {
     id: string
-  }
+  } | null
 }

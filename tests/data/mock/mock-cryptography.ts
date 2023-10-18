@@ -26,8 +26,8 @@ export class EncrypterSpy implements Encrypter {
 
 export class DecrypterSpy implements Decrypter {
   cyphertext = ''
-  plaintext = faker.lorem.word()
-  async decrypt (cyphertext: string): Promise<string> {
+  plaintext: null | string = faker.lorem.word()
+  async decrypt (cyphertext: string): Promise<string | null> {
     this.cyphertext = cyphertext
     return this.plaintext
   }

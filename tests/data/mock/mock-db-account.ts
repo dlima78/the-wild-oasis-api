@@ -60,7 +60,7 @@ export class LoadAccountByTokenRepositorySpy
 implements LoadAccountByTokenRepository {
   token!: string
   role?: string
-  result = {
+  result: LoadAccountByTokenRepository.Result = {
     id: faker.string.uuid()
   }
 

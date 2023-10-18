@@ -5,6 +5,7 @@ import {
 } from '@/data/protocols'
 import { type LoadAccoutByEmailRepository } from '../protocols/db/account/load-account-by-email-repository'
 import { faker } from '@faker-js/faker'
+import { type LoadAccountByTokenRepository } from '../protocols/db/account/load-account-by-token-repository'
 
 export class AddAccountRepositorySpy implements AddAccountRepository {
   params: AddAccountRepository.Params | undefined
@@ -52,5 +53,23 @@ implements UpdateAccessTokenRepository {
   async updateAccessToken (id: string, token: string): Promise<void> {
     this.id = id
     this.token = token
+  }
+}
+
+export class LoadAccountByTokenRepositorySpy
+implements LoadAccountByTokenRepository {
+  token!: string
+  role?: string
+  result = {
+    id: faker.string.uuid()
+  }
+
+  async loadByToken (
+    token: string,
+    role?: string | undefined
+  ): Promise<LoadAccountByTokenRepository.Result> {
+    this.token = token
+    this.role = role
+    return this.result
   }
 }

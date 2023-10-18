@@ -60,6 +60,12 @@ describe('DbLoadAccountByToken', () => {
     expect(account).toBeNull()
   })
 
+  test('should return an account on success', async () => {
+    const { sut, loadAccountByTokenRepositorySpy } = makeSut()
+    const account = await sut.loadByToken(token, role)
+    expect(account).toEqual(loadAccountByTokenRepositorySpy.result)
+  })
+
   test('Should return null if Decrypter throws', async () => {
     const { sut, decrypterSpy } = makeSut()
     jest.spyOn(decrypterSpy, 'decrypt').mockImplementationOnce(() => {

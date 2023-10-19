@@ -84,19 +84,40 @@ describe('AccountMongoReporitory', () => {
   })
 
   describe('loadByToken()', () => {
+    let name = faker.person.firstName()
+    let email = faker.internet.email()
+    let password = faker.internet.password()
+    let accessToken = faker.string.uuid()
+
+    beforeEach(() => {
+      name = faker.person.firstName()
+      email = faker.internet.email()
+      password = faker.internet.password()
+      accessToken = faker.string.uuid()
+    })
+
     test('should return an account on loadByToken without role', async () => {
       const sut = makeSut()
-      const name = faker.person.firstName()
-      const emal = faker.internet.email()
-      const password = faker.internet.password()
-      const accessToken = faker.string.uuid()
       await accountCollection.insertOne({
         name,
-        emal,
+        email,
         password,
         accessToken
       })
       const account = await sut.loadByToken(accessToken)
+      expect(account).toBeTruthy()
+      expect(account?.id).toBeTruthy()
+    })
+    test('should return an account on loadByToken with admin role', async () => {
+      const sut = makeSut()
+      await accountCollection.insertOne({
+        name,
+        email,
+        password,
+        accessToken,
+        role: 'admin'
+      })
+      const account = await sut.loadByToken(accessToken, 'admin')
       expect(account).toBeTruthy()
       expect(account?.id).toBeTruthy()
     })

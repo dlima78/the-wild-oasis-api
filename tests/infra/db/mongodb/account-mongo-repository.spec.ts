@@ -133,5 +133,11 @@ describe('AccountMongoReporitory', () => {
       const account = await sut.loadByToken(accessToken, 'admin')
       expect(account).toBeFalsy()
     })
+
+    test('Should return null if loadByToken fails', async () => {
+      const sut = makeSut()
+      const account = await sut.loadByToken(accessToken)
+      expect(account).toBeFalsy()
+    })
   })
 })

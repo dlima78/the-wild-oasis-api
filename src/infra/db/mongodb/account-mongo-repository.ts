@@ -64,6 +64,6 @@ implements
   ): Promise<LoadAccountByTokenRepository.Result> {
     const accountCollection = MongoHelper.getCollection('accounts')
     const account = await accountCollection.findOne({ accessToken, role })
-    return MongoHelper.map(account)
+    return account && MongoHelper.map(account)
   }
 }

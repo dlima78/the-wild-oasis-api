@@ -1,5 +1,7 @@
 import { type LoadAccountByToken } from '@/domain/usecases'
 import { type Controller } from '@/presentation/protocols'
+import { forbidden } from '@/presentation/helpers'
+import { AccessDeniedError } from '@/presentation/errors'
 
 export class AuthMiddleware implements Controller {
   constructor (
@@ -8,8 +10,12 @@ export class AuthMiddleware implements Controller {
   ) {}
 
   async handle (request: AuthMiddleware.Request): Promise<any> {
-    const token = request.accessToken as string
-    await this.loadAccountByToken.load(token)
+    const token = request.accessToken
+    if (token) {
+      await this.loadAccountByToken.load(token)
+    }
+
+    return forbidden(new AccessDeniedError())
   }
 }
 

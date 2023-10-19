@@ -30,7 +30,7 @@ export class AuthenticationSpy implements Authentication {
 export class LoadAccountByTokenSpy implements LoadAccountByToken {
   accessToken: string | undefined
   role: string | undefined
-  result = {
+  result: LoadAccountByToken.Result = {
     id: faker.string.uuid()
   }
 

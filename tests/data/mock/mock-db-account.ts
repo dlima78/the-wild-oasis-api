@@ -1,11 +1,12 @@
 import {
   type CheckAccountByEmailRepository,
   type AddAccountRepository,
-  type UpdateAccessTokenRepository
+  type UpdateAccessTokenRepository,
+  type LoadAccoutByEmailRepository,
+  type LoadAccountByTokenRepository
 } from '@/data/protocols'
-import { type LoadAccoutByEmailRepository } from '../protocols/db/account/load-account-by-email-repository'
+
 import { faker } from '@faker-js/faker'
-import { type LoadAccountByTokenRepository } from '../protocols/db/account/load-account-by-token-repository'
 
 export class AddAccountRepositorySpy implements AddAccountRepository {
   params: AddAccountRepository.Params | undefined

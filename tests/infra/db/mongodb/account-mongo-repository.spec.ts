@@ -82,4 +82,23 @@ describe('AccountMongoReporitory', () => {
       }
     })
   })
+
+  describe('loadByToken()', () => {
+    test('should return an account on loadByToken without role', async () => {
+      const sut = makeSut()
+      const name = faker.person.firstName()
+      const emal = faker.internet.email()
+      const password = faker.internet.password()
+      const accessToken = faker.string.uuid()
+      await accountCollection.insertOne({
+        name,
+        emal,
+        password,
+        accessToken
+      })
+      const account = await sut.loadByToken(accessToken)
+      expect(account).toBeTruthy()
+      expect(account?.id).toBeTruthy()
+    })
+  })
 })

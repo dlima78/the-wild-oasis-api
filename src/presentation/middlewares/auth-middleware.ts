@@ -1,9 +1,9 @@
 import { type LoadAccountByToken } from '@/domain/usecases'
-import { type Controller } from '@/presentation/protocols'
+import { type Middleware } from '@/presentation/protocols'
 import { forbidden, ok, serverError } from '@/presentation/helpers'
 import { AccessDeniedError } from '@/presentation/errors'
 
-export class AuthMiddleware implements Controller {
+export class AuthMiddleware implements Middleware {
   constructor (
     private readonly loadAccountByToken: LoadAccountByToken,
     private readonly role: string | undefined

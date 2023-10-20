@@ -2,9 +2,10 @@ import {
   type CheckAccountByEmailRepository,
   type AddAccountRepository,
   type UpdateAccessTokenRepository,
-  type LoadAccoutByEmailRepository
+  type LoadAccoutByEmailRepository,
+  type LoadAccountByTokenRepository
 } from '@/data/protocols'
-import { type LoadAccountByTokenRepository } from '@/data/protocols/db/account/load-account-by-token-repository'
+
 import { MongoHelper } from '@/infra/db'
 import { ObjectId } from 'mongodb'
 

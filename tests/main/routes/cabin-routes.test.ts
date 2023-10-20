@@ -19,7 +19,7 @@ describe('Cabin', () => {
     cabinCollection = MongoHelper.getCollection('cabins')
     await cabinCollection.deleteMany({})
   })
-  test('should return 204 on add cabin', async () => {
+  test('should return 403 on add cabin', async () => {
     await request(app)
       .post('/api/cabin')
       .send({
@@ -29,6 +29,6 @@ describe('Cabin', () => {
         discount: 5,
         description: 'A Cabin'
       })
-      .expect(204)
+      .expect(403)
   })
 })

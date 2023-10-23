@@ -22,4 +22,9 @@ describe('DbLoadCabins usecase', () => {
     await sut.load()
     expect(loadSpy).toHaveBeenCalled()
   })
+  test('should returns a list of Cabins on success', async () => {
+    const { sut, loadCabinsRepositorySpy } = makeSut()
+    const cabins = await sut.load()
+    expect(loadCabinsRepositorySpy.result).toEqual(cabins)
+  })
 })

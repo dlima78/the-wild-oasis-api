@@ -94,5 +94,13 @@ describe('Cabin Routes', () => {
         .set('x-access-token', accessToken)
         .expect(200)
     })
+
+    test('Should return 204 on load cabins with valid accessToken ', async () => {
+      const accessToken = await mockAccessToken()
+      await request(app)
+        .get('/api/cabins')
+        .set('x-access-token', accessToken)
+        .expect(204)
+    })
   })
 })

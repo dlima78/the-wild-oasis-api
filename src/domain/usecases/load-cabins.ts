@@ -5,5 +5,5 @@ export interface LoadCabins {
 }
 
 export namespace LoadCabins {
-  export type Result = CabinModel[]
+  export type Result = CabinModel[] | null
 }

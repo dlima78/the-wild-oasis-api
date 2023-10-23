@@ -4,7 +4,6 @@ import { type LoadCabinsRepository } from '@/data/protocols'
 export class DbLoadCabins implements LoadCabins {
   constructor (private readonly loadCabinsRepository: LoadCabinsRepository) {}
   async load (): Promise<LoadCabins.Result> {
-    await this.loadCabinsRepository.loadAll()
-    return null
+    return await this.loadCabinsRepository.loadAll()
   }
 }

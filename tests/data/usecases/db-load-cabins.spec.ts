@@ -27,4 +27,15 @@ describe('DbLoadCabins usecase', () => {
     const cabins = await sut.load()
     expect(loadCabinsRepositorySpy.result).toEqual(cabins)
   })
+
+  test('should throw if LoadCabins throws', async () => {
+    const { sut, loadCabinsRepositorySpy } = makeSut()
+    jest
+      .spyOn(loadCabinsRepositorySpy, 'loadAll')
+      .mockImplementationOnce(() => {
+        throw new Error()
+      })
+    const promise = sut.load()
+    await expect(promise).rejects.toThrow()
+  })
 })

@@ -5,6 +5,7 @@ import env from '@/main/config/env'
 import { type Collection } from 'mongodb'
 import request from 'supertest'
 import jwt from 'jsonwebtoken'
+import { mockAddCabinParams } from '@/tests/domain/mocks'
 
 let cabinCollection: Collection
 let accountCollection: Collection
@@ -31,7 +32,7 @@ const mockAccessToken = async (): Promise<string> => {
   return accessToken
 }
 
-describe('Cabin', () => {
+describe('Cabin Routes', () => {
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL as string)
   })
@@ -46,31 +47,60 @@ describe('Cabin', () => {
     accountCollection = MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })
-  test('should return 403 on add cabin', async () => {
-    await request(app)
-      .post('/api/cabin')
-      .send({
-        name: 'Cabin01',
-        maxCapacity: 4,
-        regularPrice: 30,
-        discount: 5,
-        description: 'A Cabin'
-      })
-      .expect(403)
+
+  describe('POST/cabin', () => {
+    test('should return 403 on add cabin', async () => {
+      await request(app)
+        .post('/api/cabin')
+        .send({
+          name: 'Cabin01',
+          maxCapacity: 4,
+          regularPrice: 30,
+          discount: 5,
+          description: 'A Cabin'
+        })
+        .expect(403)
+    })
+
+    test('should return 204 on add cabin with valid accessToken', async () => {
+      const accessToken = await mockAccessToken()
+      await request(app)
+        .post('/api/cabin')
+        .set('x-access-token', accessToken)
+        .send({
+          name: 'Cabin01',
+          maxCapacity: 4,
+          regularPrice: 30,
+          discount: 5,
+          description: 'A Cabin'
+        })
+        .expect(204)
+    })
   })
 
-  test('should return 204 on add cabin with valid accessToken', async () => {
-    const accessToken = await mockAccessToken()
-    await request(app)
-      .post('/api/cabin')
-      .set('x-access-token', accessToken)
-      .send({
-        name: 'Cabin01',
-        maxCapacity: 4,
-        regularPrice: 30,
-        discount: 5,
-        description: 'A Cabin'
-      })
-      .expect(204)
+  describe('GET/cabins', () => {
+    test('should return 403 on load cabins without accessToken', async () => {
+      await request(app).get('/api/cabins').expect(403)
+    })
+
+    test('Should return 200 on load cabins with valid accessToken', async () => {
+      await cabinCollection.insertMany([
+        mockAddCabinParams(),
+        mockAddCabinParams
+      ])
+      const accessToken = await mockAccessToken()
+      await request(app)
+        .get('/api/cabins')
+        .set('x-access-token', accessToken)
+        .expect(200)
+    })
+
+    test('Should return 204 on load cabins with valid accessToken ', async () => {
+      const accessToken = await mockAccessToken()
+      await request(app)
+        .get('/api/cabins')
+        .set('x-access-token', accessToken)
+        .expect(204)
+    })
   })
 })

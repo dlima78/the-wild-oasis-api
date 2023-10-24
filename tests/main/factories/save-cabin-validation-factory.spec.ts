@@ -1,4 +1,4 @@
-import { makeAddCabinValidation } from '@/main/factories'
+import { makeSaveCabinValidation } from '@/main/factories'
 import {
   RequiredFieldValidation,
   ValidationComposite
@@ -7,9 +7,9 @@ import { type Validation } from '@/presentation/protocols'
 
 jest.mock('@/validation/validators/validation-composite')
 
-describe('AddCabinValidation Factory', () => {
+describe('SaveCabinValidation Factory', () => {
   test('should call ValidationComposite with all validations', () => {
-    makeAddCabinValidation()
+    makeSaveCabinValidation()
     const validations: Validation[] = []
     for (const field of [
       'name',

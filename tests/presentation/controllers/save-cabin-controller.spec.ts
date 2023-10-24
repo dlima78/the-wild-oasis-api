@@ -1,10 +1,10 @@
-import { type AddCabin } from '@/domain/usecases/add-cabin'
-import { AddCabinController } from '@/presentation/controllers'
+import { type SaveCabin } from '@/domain/usecases/save-cabin'
+import { SaveCabinController } from '@/presentation/controllers'
 import { badRequest, noContent, serverError } from '@/presentation/helpers'
 import { ValidationSpy } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
 
-const mockRequest = (): AddCabinController.Request => ({
+const mockRequest = (): SaveCabinController.Request => ({
   name: faker.person.firstName(),
   maxCapacity: faker.number.int(),
   regularPrice: faker.number.float(),
@@ -12,8 +12,8 @@ const mockRequest = (): AddCabinController.Request => ({
   description: faker.lorem.words()
 })
 
-export class AddCabinSpy implements AddCabin {
-  params: AddCabin.Params = {
+export class SaveCabinSpy implements SaveCabin {
+  params: SaveCabin.Params = {
     name: '',
     maxCapacity: 0,
     regularPrice: 0,
@@ -21,34 +21,34 @@ export class AddCabinSpy implements AddCabin {
     description: ''
   }
 
-  async add (data: AddCabin.Params): Promise<void> {
+  async save (data: SaveCabin.Params): Promise<void> {
     this.params = data
   }
 }
 
 interface SutTypes {
-  sut: AddCabinController
-  addCabinSpy: AddCabinSpy
+  sut: SaveCabinController
+  saveCabinSpy: SaveCabinSpy
   validationSpy: ValidationSpy
 }
 
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy()
-  const addCabinSpy = new AddCabinSpy()
-  const sut = new AddCabinController(addCabinSpy, validationSpy)
+  const saveCabinSpy = new SaveCabinSpy()
+  const sut = new SaveCabinController(saveCabinSpy, validationSpy)
   return {
     sut,
-    addCabinSpy,
+    saveCabinSpy,
     validationSpy
   }
 }
 
-describe('Add Cabin Controller', () => {
-  test('should call AddCabin with correct values', async () => {
-    const { sut, addCabinSpy } = makeSut()
+describe('Save Cabin Controller', () => {
+  test('should call SaveCabin with correct values', async () => {
+    const { sut, saveCabinSpy } = makeSut()
     const request = mockRequest()
     await sut.handle(request)
-    expect(addCabinSpy.params).toEqual({ ...request })
+    expect(saveCabinSpy.params).toEqual({ ...request })
   })
 
   test('should return 204 on success', async () => {
@@ -71,9 +71,9 @@ describe('Add Cabin Controller', () => {
     expect(validationSpy.input).toEqual(request)
   })
 
-  test('should return 500 if AddCabin throws', async () => {
-    const { sut, addCabinSpy } = makeSut()
-    jest.spyOn(addCabinSpy, 'add').mockImplementationOnce(() => {
+  test('should return 500 if SaveCabin throws', async () => {
+    const { sut, saveCabinSpy } = makeSut()
+    jest.spyOn(saveCabinSpy, 'save').mockImplementationOnce(() => {
       throw new Error()
     })
     const httpResponse = await sut.handle(mockRequest())

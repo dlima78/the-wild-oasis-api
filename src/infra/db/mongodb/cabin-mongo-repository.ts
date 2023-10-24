@@ -1,12 +1,12 @@
 import {
   type LoadCabinsRepository,
-  type AddCabinRepository
+  type SaveCabinRepository
 } from '@/data/protocols'
 import { MongoHelper } from './mongo-helper'
 
 export class CabinMongoRepository
-implements AddCabinRepository, LoadCabinsRepository {
-  async add (data: AddCabinRepository.Params): Promise<void> {
+implements SaveCabinRepository, LoadCabinsRepository {
+  async save (data: SaveCabinRepository.Params): Promise<void> {
     const cabinCollection = MongoHelper.getCollection('cabins')
     await cabinCollection.insertOne(data)
   }

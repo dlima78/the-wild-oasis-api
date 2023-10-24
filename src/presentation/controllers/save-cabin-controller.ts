@@ -1,4 +1,4 @@
-import { type AddCabin } from '@/domain/usecases/add-cabin'
+import { type SaveCabin } from '@/domain/usecases/save-cabin'
 import { badRequest, noContent, serverError } from '@/presentation/helpers'
 import {
   type Controller,
@@ -6,19 +6,19 @@ import {
   type Validation
 } from '@/presentation/protocols'
 
-export class AddCabinController implements Controller {
+export class SaveCabinController implements Controller {
   constructor (
-    private readonly addCabin: AddCabin,
+    private readonly saveCabin: SaveCabin,
     private readonly validation: Validation
   ) {}
 
-  async handle (request: AddCabinController.Request): Promise<HttpResponse> {
+  async handle (request: SaveCabinController.Request): Promise<HttpResponse> {
     try {
       const error = this.validation.validate(request)
       if (error != null) {
         return badRequest(error)
       }
-      await this.addCabin.add(request)
+      await this.saveCabin.save(request)
 
       return noContent()
     } catch (error) {
@@ -27,7 +27,7 @@ export class AddCabinController implements Controller {
   }
 }
 
-export namespace AddCabinController {
+export namespace SaveCabinController {
   export type Request = {
     name: string
     maxCapacity: number

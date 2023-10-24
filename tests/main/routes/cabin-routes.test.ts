@@ -5,7 +5,7 @@ import env from '@/main/config/env'
 import { type Collection } from 'mongodb'
 import request from 'supertest'
 import jwt from 'jsonwebtoken'
-import { mockAddCabinParams } from '@/tests/domain/mocks'
+import { mockSaveCabinParams } from '@/tests/domain/mocks'
 
 let cabinCollection: Collection
 let accountCollection: Collection
@@ -48,8 +48,8 @@ describe('Cabin Routes', () => {
     await accountCollection.deleteMany({})
   })
 
-  describe('POST/cabin', () => {
-    test('should return 403 on add cabin', async () => {
+  describe('PUT/cabin', () => {
+    test('should return 403 on save cabin', async () => {
       await request(app)
         .post('/api/cabin')
         .send({
@@ -62,7 +62,7 @@ describe('Cabin Routes', () => {
         .expect(403)
     })
 
-    test('should return 204 on add cabin with valid accessToken', async () => {
+    test('should return 204 on save cabin with valid accessToken', async () => {
       const accessToken = await mockAccessToken()
       await request(app)
         .post('/api/cabin')
@@ -85,8 +85,8 @@ describe('Cabin Routes', () => {
 
     test('Should return 200 on load cabins with valid accessToken', async () => {
       await cabinCollection.insertMany([
-        mockAddCabinParams(),
-        mockAddCabinParams
+        mockSaveCabinParams(),
+        mockSaveCabinParams
       ])
       const accessToken = await mockAccessToken()
       await request(app)

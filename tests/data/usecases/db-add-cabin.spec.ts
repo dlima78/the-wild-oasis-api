@@ -1,9 +1,9 @@
-import { DbAddCabin } from '@/data/usecases'
-import { type AddCabinRepository } from '@/data/protocols'
-import { mockAddCabinParams } from '@/tests/domain/mocks'
+import { DbSaveCabin } from '@/data/usecases'
+import { type SaveCabinRepository } from '@/data/protocols'
+import { mockSaveCabinParams } from '@/tests/domain/mocks'
 
-export class AddCabinRepositorySpy implements AddCabinRepository {
-  params: AddCabinRepository.Params = {
+export class SaveCabinRepositorySpy implements SaveCabinRepository {
+  params: SaveCabinRepository.Params = {
     name: '',
     maxCapacity: 0,
     regularPrice: 0,
@@ -11,39 +11,39 @@ export class AddCabinRepositorySpy implements AddCabinRepository {
     description: ''
   }
 
-  async add (params: AddCabinRepository.Params): Promise<void> {
+  async save (params: SaveCabinRepository.Params): Promise<void> {
     this.params = params
   }
 }
 
 interface SutTypes {
-  sut: DbAddCabin
-  addCabinRepositorySpy: AddCabinRepositorySpy
+  sut: DbSaveCabin
+  saveCabinRepositorySpy: SaveCabinRepositorySpy
 }
 
 const makeSut = (): SutTypes => {
-  const addCabinRepositorySpy = new AddCabinRepositorySpy()
-  const sut = new DbAddCabin(addCabinRepositorySpy)
+  const saveCabinRepositorySpy = new SaveCabinRepositorySpy()
+  const sut = new DbSaveCabin(saveCabinRepositorySpy)
   return {
-    addCabinRepositorySpy,
+    saveCabinRepositorySpy,
     sut
   }
 }
 
-describe('DbAddCAbin', () => {
-  test('should call AddCabinRepository with correct values', async () => {
-    const { sut, addCabinRepositorySpy } = makeSut()
-    const cabinData = mockAddCabinParams()
-    await sut.add(cabinData)
-    expect(addCabinRepositorySpy.params).toEqual(cabinData)
+describe('DbSaveCabin', () => {
+  test('should call SaveCabinRepository with correct values', async () => {
+    const { sut, saveCabinRepositorySpy } = makeSut()
+    const cabinData = mockSaveCabinParams()
+    await sut.save(cabinData)
+    expect(saveCabinRepositorySpy.params).toEqual(cabinData)
   })
 
-  test('should throw if AddCabinRepository throws', async () => {
-    const { sut, addCabinRepositorySpy } = makeSut()
-    jest.spyOn(addCabinRepositorySpy, 'add').mockImplementationOnce(() => {
+  test('should throw if SaveCabinRepository throws', async () => {
+    const { sut, saveCabinRepositorySpy } = makeSut()
+    jest.spyOn(saveCabinRepositorySpy, 'save').mockImplementationOnce(() => {
       throw new Error()
     })
-    const promise = sut.add(mockAddCabinParams())
+    const promise = sut.save(mockSaveCabinParams())
     await expect(promise).rejects.toThrow()
   })
 })

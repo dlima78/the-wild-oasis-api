@@ -4,7 +4,7 @@ import {
   ValidationComposite
 } from '@/validation/validators'
 
-export const makeAddCabinValidation = (): ValidationComposite => {
+export const makeSaveCabinValidation = (): ValidationComposite => {
   const validations: Validation[] = []
   for (const field of [
     'name',

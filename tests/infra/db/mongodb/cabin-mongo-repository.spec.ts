@@ -28,6 +28,42 @@ describe('CabinMongoRepository', () => {
       const count = await cabinCollection.countDocuments()
       expect(count).toBe(1)
     })
+
+    test('should update cabin if its not new', async () => {
+      const cabin = mockSaveCabinParamsWithoutId()
+      const result = await cabinCollection.insertOne({
+        name: cabin.name,
+        maxCapacity: cabin.maxCapacity,
+        regularPrice: cabin.regularPrice,
+        discount: cabin.discount,
+        description: cabin.description,
+        image: cabin.image
+      })
+      const cabinId = result.insertedId.toHexString()
+      const sut = makeSut()
+      await sut.save({
+        id: cabinId,
+        name: 'new name',
+        maxCapacity: 3,
+        regularPrice: cabin.regularPrice,
+        discount: cabin.discount,
+        description: 'A beautiful cabin',
+        image: cabin.image
+      })
+
+      const cabinResult = await cabinCollection.find({}).toArray()
+
+      const cabinUpdated = MongoHelper.mapCollection(cabinResult)
+
+      expect(cabinResult).toBeTruthy()
+      expect(cabinResult.length).toBe(1)
+      expect(cabinUpdated[0].name).toBe('new name')
+      expect(cabinUpdated[0].maxCapacity).toBe(3)
+      expect(cabinUpdated[0].regularPrice).toBe(cabin.regularPrice)
+      expect(cabinUpdated[0].discount).toBe(cabin.discount)
+      expect(cabinUpdated[0].description).toBe('A beautiful cabin')
+      expect(cabinUpdated[0].image).toBe(cabin.image)
+    })
   })
 
   describe('loadAll()', () => {

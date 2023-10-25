@@ -1,20 +1,9 @@
 import { DbSaveCabin } from '@/data/usecases'
-import { type SaveCabinRepository } from '@/data/protocols'
-import { mockSaveCabinParams } from '@/tests/domain/mocks'
-
-export class SaveCabinRepositorySpy implements SaveCabinRepository {
-  params: SaveCabinRepository.Params = {
-    name: '',
-    maxCapacity: 0,
-    regularPrice: 0,
-    discount: 0,
-    description: ''
-  }
-
-  async save (params: SaveCabinRepository.Params): Promise<void> {
-    this.params = params
-  }
-}
+import {
+  mockSaveCabinParamsWithId,
+  mockSaveCabinParamsWithoutId
+} from '@/tests/domain/mocks'
+import { SaveCabinRepositorySpy } from '@/tests/data/mock'
 
 interface SutTypes {
   sut: DbSaveCabin
@@ -33,9 +22,9 @@ const makeSut = (): SutTypes => {
 describe('DbSaveCabin', () => {
   test('should call SaveCabinRepository with correct values', async () => {
     const { sut, saveCabinRepositorySpy } = makeSut()
-    const cabinData = mockSaveCabinParams()
+    const cabinData = mockSaveCabinParamsWithoutId()
     await sut.save(cabinData)
-    expect(saveCabinRepositorySpy.params).toEqual(cabinData)
+    expect(saveCabinRepositorySpy.data).toEqual(cabinData)
   })
 
   test('should throw if SaveCabinRepository throws', async () => {
@@ -43,7 +32,7 @@ describe('DbSaveCabin', () => {
     jest.spyOn(saveCabinRepositorySpy, 'save').mockImplementationOnce(() => {
       throw new Error()
     })
-    const promise = sut.save(mockSaveCabinParams())
+    const promise = sut.save(mockSaveCabinParamsWithId())
     await expect(promise).rejects.toThrow()
   })
 })

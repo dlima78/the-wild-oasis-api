@@ -5,7 +5,7 @@ import env from '@/main/config/env'
 import { type Collection } from 'mongodb'
 import request from 'supertest'
 import jwt from 'jsonwebtoken'
-import { mockSaveCabinParams } from '@/tests/domain/mocks'
+import { mockSaveCabinParamsWithoutId } from '@/tests/domain/mocks'
 
 let cabinCollection: Collection
 let accountCollection: Collection
@@ -51,7 +51,7 @@ describe('Cabin Routes', () => {
   describe('PUT/cabin', () => {
     test('should return 403 on save cabin', async () => {
       await request(app)
-        .post('/api/cabin')
+        .put('/api/cabin')
         .send({
           name: 'Cabin01',
           maxCapacity: 4,
@@ -65,7 +65,7 @@ describe('Cabin Routes', () => {
     test('should return 204 on save cabin with valid accessToken', async () => {
       const accessToken = await mockAccessToken()
       await request(app)
-        .post('/api/cabin')
+        .put('/api/cabin')
         .set('x-access-token', accessToken)
         .send({
           name: 'Cabin01',
@@ -85,8 +85,8 @@ describe('Cabin Routes', () => {
 
     test('Should return 200 on load cabins with valid accessToken', async () => {
       await cabinCollection.insertMany([
-        mockSaveCabinParams(),
-        mockSaveCabinParams
+        mockSaveCabinParamsWithoutId(),
+        mockSaveCabinParamsWithoutId()
       ])
       const accessToken = await mockAccessToken()
       await request(app)

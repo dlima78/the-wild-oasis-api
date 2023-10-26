@@ -1,7 +1,7 @@
 import { type CabinModel } from '@/domain/models'
 
 export interface AddCabin {
-  add: (data: AddCabin.Params) => Promise<void>
+  add: (data: AddCabin.Params) => Promise<boolean>
 }
 
 export namespace AddCabin {

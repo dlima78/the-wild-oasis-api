@@ -6,6 +6,7 @@ import { type Collection } from 'mongodb'
 import request from 'supertest'
 import jwt from 'jsonwebtoken'
 import { mockSaveCabinParamsWithoutId } from '@/tests/domain/mocks'
+import { faker } from '@faker-js/faker'
 
 let cabinCollection: Collection
 let accountCollection: Collection
@@ -48,10 +49,10 @@ describe('Cabin Routes', () => {
     await accountCollection.deleteMany({})
   })
 
-  describe('PUT/cabin', () => {
+  describe('PUT/cabin/:cabinId', () => {
     test('should return 403 on save cabin', async () => {
       await request(app)
-        .put('/api/cabin')
+        .put('/api/cabin/any_id')
         .send({
           name: 'Cabin01',
           maxCapacity: 4,
@@ -64,8 +65,16 @@ describe('Cabin Routes', () => {
 
     test('should return 204 on save cabin with valid accessToken', async () => {
       const accessToken = await mockAccessToken()
+      const res = await cabinCollection.insertOne({
+        name: faker.person.fullName(),
+        maxCapacity: faker.number.int(),
+        regularPrice: faker.number.int(),
+        discount: faker.number.int(),
+        description: faker.lorem.text(),
+        image: faker.image.url()
+      })
       await request(app)
-        .put('/api/cabin')
+        .put(`/api/cabin/${res.insertedId.toHexString()}`)
         .set('x-access-token', accessToken)
         .send({
           name: 'Cabin01',

@@ -30,6 +30,12 @@ describe('DbAddCabin', () => {
     expect(isValid).toBe(true)
   })
 
+  test('should return false if AddCabinRepository returns false', async () => {
+    const { sut, addCabinRepositorySpy } = makeSut()
+    addCabinRepositorySpy.result = false
+    const isValid = await sut.add(mockAddCabinParams())
+    expect(isValid).toBe(false)
+  })
   test('should throw if AddCabinRepository throws', async () => {
     const { sut, addCabinRepositorySpy } = makeSut()
     jest.spyOn(addCabinRepositorySpy, 'add').mockImplementationOnce(() => {

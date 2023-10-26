@@ -23,4 +23,13 @@ describe('DbAddCabin', () => {
     await sut.add(cabinData)
     expect(addCabinRepositorySpy.data).toEqual(cabinData)
   })
+
+  test('should throw if AddCabinRepository throws', async () => {
+    const { sut, addCabinRepositorySpy } = makeSut()
+    jest.spyOn(addCabinRepositorySpy, 'add').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.add(mockSaveCabinParams())
+    await expect(promise).rejects.toThrow()
+  })
 })

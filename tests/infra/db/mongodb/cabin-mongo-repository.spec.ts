@@ -1,5 +1,8 @@
 import { CabinMongoRepository, MongoHelper } from '@/infra/db'
-import { mockSaveCabinParamsWithoutId } from '@/tests/domain/mocks'
+import {
+  mockAddCabinParams,
+  mockSaveCabinParamsWithoutId
+} from '@/tests/domain/mocks'
 import { type Collection } from 'mongodb'
 
 const makeSut = (): CabinMongoRepository => {
@@ -21,7 +24,17 @@ describe('CabinMongoRepository', () => {
     cabinCollection = MongoHelper.getCollection('cabins')
     await cabinCollection.deleteMany({})
   })
+
   describe('add()', () => {
+    test('should add cabin on success', async () => {
+      const sut = makeSut()
+      await sut.add(mockAddCabinParams())
+      const count = await cabinCollection.countDocuments()
+      expect(count).toBe(1)
+    })
+  })
+
+  describe('save()', () => {
     test('should add cabin if its new', async () => {
       const sut = makeSut()
       await sut.save(mockSaveCabinParamsWithoutId())

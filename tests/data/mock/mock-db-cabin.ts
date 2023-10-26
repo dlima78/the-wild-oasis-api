@@ -21,7 +21,9 @@ export class SaveCabinRepositorySpy implements SaveCabinRepository {
 
 export class AddCabinRepositorySpy implements AddCabinRepository {
   data!: AddCabinRepository.Params
-  async add (data: SaveCabinRepository.Params): Promise<void> {
+  result = true
+  async add (data: SaveCabinRepository.Params): Promise<boolean> {
     this.data = data
+    return this.result
   }
 }

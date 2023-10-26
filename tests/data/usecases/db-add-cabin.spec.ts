@@ -1,5 +1,5 @@
 import { DbAddCabin } from '@/data/usecases'
-import { mockSaveCabinParams } from '@/tests/domain/mocks'
+import { mockAddCabinParams } from '@/tests/domain/mocks'
 import { AddCabinRepositorySpy } from '@/tests/data/mock'
 
 interface SutTypes {
@@ -19,9 +19,15 @@ const makeSut = (): SutTypes => {
 describe('DbAddCabin', () => {
   test('should call AddCabinRepository with correct values', async () => {
     const { sut, addCabinRepositorySpy } = makeSut()
-    const cabinData = mockSaveCabinParams()
+    const cabinData = mockAddCabinParams()
     await sut.add(cabinData)
     expect(addCabinRepositorySpy.data).toEqual(cabinData)
+  })
+
+  test('should return true on success', async () => {
+    const { sut } = makeSut()
+    const isValid = await sut.add(mockAddCabinParams())
+    expect(isValid).toBe(true)
   })
 
   test('should throw if AddCabinRepository throws', async () => {
@@ -29,7 +35,7 @@ describe('DbAddCabin', () => {
     jest.spyOn(addCabinRepositorySpy, 'add').mockImplementationOnce(() => {
       throw new Error()
     })
-    const promise = sut.add(mockSaveCabinParams())
+    const promise = sut.add(mockAddCabinParams())
     await expect(promise).rejects.toThrow()
   })
 })

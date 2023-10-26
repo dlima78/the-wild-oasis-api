@@ -2,7 +2,7 @@ import { type SaveCabin } from '@/domain/usecases/save-cabin'
 import { faker } from '@faker-js/faker'
 import { type CabinModel } from '../models'
 
-export const mockSaveCabinParams = (): SaveCabin.Params => ({
+export const mockAddCabinParams = (): SaveCabin.Params => ({
   name: faker.person.fullName(),
   maxCapacity: faker.number.int(),
   regularPrice: faker.number.int(),

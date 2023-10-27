@@ -4,7 +4,7 @@ import {
   type Controller,
   type Validation
 } from '@/presentation/protocols'
-import { badRequest } from '@/presentation/helpers'
+import { badRequest, serverError } from '@/presentation/helpers'
 
 export class AddCabinController implements Controller {
   constructor (
@@ -13,14 +13,18 @@ export class AddCabinController implements Controller {
   ) {}
 
   async handle (request: AddCabinController.Request): Promise<HttpResponse> {
-    const error = this.validation.validate(request)
-    if (error) {
-      return badRequest(error)
-    }
-    await this.addCabin.add(request)
-    return {
-      statusCode: 400,
-      body: ''
+    try {
+      const error = this.validation.validate(request)
+      if (error) {
+        return badRequest(error)
+      }
+      await this.addCabin.add(request)
+      return {
+        statusCode: 400,
+        body: ''
+      }
+    } catch (error) {
+      return serverError(error as Error)
     }
   }
 }

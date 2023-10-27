@@ -4,7 +4,7 @@ import {
   type Controller,
   type Validation
 } from '@/presentation/protocols'
-import { badRequest, serverError } from '@/presentation/helpers'
+import { badRequest, noContent, serverError } from '@/presentation/helpers'
 
 export class AddCabinController implements Controller {
   constructor (
@@ -19,10 +19,7 @@ export class AddCabinController implements Controller {
         return badRequest(error)
       }
       await this.addCabin.add(request)
-      return {
-        statusCode: 400,
-        body: ''
-      }
+      return noContent()
     } catch (error) {
       return serverError(error as Error)
     }

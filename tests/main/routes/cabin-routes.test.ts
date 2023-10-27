@@ -49,6 +49,21 @@ describe('Cabin Routes', () => {
     await accountCollection.deleteMany({})
   })
 
+  describe('POST/cabin', () => {
+    test('should return 403 on add cabin', async () => {
+      await request(app)
+        .post('/api/cabin')
+        .send({
+          name: 'Cabin01',
+          maxCapacity: 4,
+          regularPrice: 30,
+          discount: 5,
+          description: 'A Cabin'
+        })
+        .expect(403)
+    })
+  })
+
   describe('PUT/cabin/:cabinId', () => {
     test('should return 403 on save cabin', async () => {
       await request(app)

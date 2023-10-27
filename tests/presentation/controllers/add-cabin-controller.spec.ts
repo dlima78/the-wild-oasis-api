@@ -1,7 +1,7 @@
 import { AddCabinController } from '@/presentation/controllers'
 import { AddCabinSpy, ValidationSpy } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
-import { badRequest } from '@/presentation/helpers'
+import { badRequest, serverError } from '@/presentation/helpers'
 
 const mockRequest = (): AddCabinController.Request => ({
   name: faker.person.firstName(),
@@ -48,5 +48,14 @@ describe('Add Cabin Controller', () => {
     const request = mockRequest()
     await sut.handle(request)
     expect(addCabinSpy.params).toEqual({ ...request })
+  })
+
+  test('should return 500 if AddCabin throws', async () => {
+    const { sut, addCabinSpy } = makeSut()
+    jest.spyOn(addCabinSpy, 'add').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })

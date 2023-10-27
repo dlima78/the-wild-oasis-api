@@ -62,6 +62,21 @@ describe('Cabin Routes', () => {
         })
         .expect(403)
     })
+
+    test('should return 204 on add cabin with valid accessToken', async () => {
+      const accessToken = await mockAccessToken()
+      await request(app)
+        .post('/api/cabin')
+        .set('x-access-token', accessToken)
+        .send({
+          name: 'Cabin01',
+          maxCapacity: 4,
+          regularPrice: 30,
+          discount: 5,
+          description: 'A Cabin'
+        })
+        .expect(204)
+    })
   })
 
   describe('PUT/cabin/:cabinId', () => {

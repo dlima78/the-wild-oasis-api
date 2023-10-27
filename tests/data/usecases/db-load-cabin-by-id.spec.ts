@@ -16,11 +16,24 @@ const makeSut = (): SutTypes => {
   }
 }
 
+const id = faker.string.uuid()
+
 describe('DbLoadCabinById usecase', () => {
   test('should call LoadCabinByIdRepository with correct id', async () => {
     const { sut, loadCabinByIdRepositorySpy } = makeSut()
-    const cabinId = faker.string.uuid()
+    const cabinId = id
     await sut.loadById(cabinId)
     expect(loadCabinByIdRepositorySpy.id).toBe(cabinId)
+  })
+
+  test('should throw if LoadCabinByIdThrows', async () => {
+    const { sut, loadCabinByIdRepositorySpy } = makeSut()
+    jest
+      .spyOn(loadCabinByIdRepositorySpy, 'loadById')
+      .mockImplementationOnce(() => {
+        throw new Error()
+      })
+    const promise = sut.loadById(id)
+    await expect(promise).rejects.toThrow()
   })
 })

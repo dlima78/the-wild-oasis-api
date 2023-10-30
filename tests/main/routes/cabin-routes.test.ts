@@ -142,4 +142,9 @@ describe('Cabin Routes', () => {
         .expect(204)
     })
   })
+  describe('GET/cabin/:cabinId', () => {
+    test('should return 403 on load cabin without accessToken', async () => {
+      await request(app).get('/api/cabin/anyId').expect(403)
+    })
+  })
 })

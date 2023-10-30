@@ -1,15 +1,15 @@
 import { LoadCabinByIdRepositorySpy } from '@/tests/data/mock'
-import { DbLoadCabinById } from '@/data/usecases'
+import { DbLoadCabin } from '@/data/usecases'
 import { faker } from '@faker-js/faker'
 
 type SutTypes = {
   loadCabinByIdRepositorySpy: LoadCabinByIdRepositorySpy
-  sut: DbLoadCabinById
+  sut: DbLoadCabin
 }
 
 const makeSut = (): SutTypes => {
   const loadCabinByIdRepositorySpy = new LoadCabinByIdRepositorySpy()
-  const sut = new DbLoadCabinById(loadCabinByIdRepositorySpy)
+  const sut = new DbLoadCabin(loadCabinByIdRepositorySpy)
   return {
     loadCabinByIdRepositorySpy,
     sut
@@ -38,6 +38,12 @@ describe('DbLoadCabinById usecase', () => {
   })
 
   test('should return a Cabin on success', async () => {
+    const { sut, loadCabinByIdRepositorySpy } = makeSut()
+    const cabin = await sut.loadById(id)
+    expect(cabin).toEqual(loadCabinByIdRepositorySpy.result)
+  })
+
+  test('should ', async () => {
     const { sut, loadCabinByIdRepositorySpy } = makeSut()
     const cabin = await sut.loadById(id)
     expect(cabin).toEqual(loadCabinByIdRepositorySpy.result)

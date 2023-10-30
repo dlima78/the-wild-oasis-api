@@ -1,7 +1,7 @@
 import { type LoadCabinByIdRepository } from '@/data/protocols'
 import { type LoadCabinById } from '@/domain/usecases'
 
-export class DbLoadCabinById implements LoadCabinById {
+export class DbLoadCabin implements LoadCabinById {
   constructor (
     private readonly loadCabinByIdRepository: LoadCabinByIdRepository
   ) {}

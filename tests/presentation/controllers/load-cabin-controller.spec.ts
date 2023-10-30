@@ -1,7 +1,7 @@
 import { LoadCabinController } from '@/presentation/controllers'
 import { LoadCabinSpy } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
-import { noContent, ok } from '@/presentation/helpers'
+import { noContent, ok, serverError } from '@/presentation/helpers'
 
 type SutTypes = {
   loadCabinSpy: LoadCabinSpy
@@ -40,5 +40,14 @@ describe('LoadCabin controller', () => {
     loadCabinSpy.result = null
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(noContent())
+  })
+
+  test('should return 500 if LoadCabin fails', async () => {
+    const { sut, loadCabinSpy } = makeSut()
+    jest.spyOn(loadCabinSpy, 'loadById').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })

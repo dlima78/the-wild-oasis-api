@@ -24,7 +24,7 @@ export class AddCabinSpy implements AddCabin {
 }
 
 export class LoadCabinSpy implements LoadCabin {
-  result = mockCabinModel()
+  result: LoadCabin.Result = mockCabinModel()
   id = ''
   async loadById (id: string): Promise<LoadCabin.Result> {
     this.id = id

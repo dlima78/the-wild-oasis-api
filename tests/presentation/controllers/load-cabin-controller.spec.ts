@@ -1,7 +1,7 @@
 import { LoadCabinController } from '@/presentation/controllers'
 import { LoadCabinSpy } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
-import { ok } from '@/presentation/helpers'
+import { noContent, ok } from '@/presentation/helpers'
 
 type SutTypes = {
   loadCabinSpy: LoadCabinSpy
@@ -33,5 +33,12 @@ describe('LoadCabin controller', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(ok(httpResponse.body))
+  })
+
+  test('should return 204 if LoadCabin returns null', async () => {
+    const { sut, loadCabinSpy } = makeSut()
+    loadCabinSpy.result = null
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(noContent())
   })
 })

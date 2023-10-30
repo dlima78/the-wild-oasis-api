@@ -1,5 +1,9 @@
-import { type LoadCabins, type AddCabin } from '@/domain/usecases'
-import { mockCabinModels } from '@/tests/domain/mocks'
+import {
+  type LoadCabins,
+  type AddCabin,
+  type LoadCabin
+} from '@/domain/usecases'
+import { mockCabinModel, mockCabinModels } from '@/tests/domain/mocks'
 
 export class LoadCabinsSpy implements LoadCabins {
   result = mockCabinModels()
@@ -15,6 +19,15 @@ export class AddCabinSpy implements AddCabin {
 
   async add (params: AddCabin.Params): Promise<boolean> {
     this.params = params
+    return this.result
+  }
+}
+
+export class LoadCabinSpy implements LoadCabin {
+  result = mockCabinModel()
+  id = ''
+  async loadById (id: string): Promise<LoadCabin.Result> {
+    this.id = id
     return this.result
   }
 }

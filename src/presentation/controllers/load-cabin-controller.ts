@@ -1,6 +1,6 @@
 import { type LoadCabin } from '@/domain/usecases'
 import { type Controller, type HttpResponse } from '@/presentation/protocols'
-import { ok } from '@/presentation/helpers'
+import { noContent, ok } from '@/presentation/helpers'
 
 export class LoadCabinController implements Controller {
   constructor (private readonly loadCabin: LoadCabin) {}
@@ -10,10 +10,7 @@ export class LoadCabinController implements Controller {
     if (cabinModel) {
       return ok(cabinModel)
     }
-    return {
-      statusCode: 0,
-      body: ''
-    }
+    return noContent()
   }
 }
 

@@ -103,4 +103,21 @@ describe('CabinMongoRepository', () => {
       expect(cabins[1].image).toBe(saveCabinModels[1].image)
     })
   })
+
+  describe('loadById', () => {
+    test('should load a Cabin by id', async () => {
+      const cabin = mockAddCabinParams()
+      const res = await cabinCollection.insertOne(cabin)
+      const cabinId = res.insertedId.toHexString()
+      const sut = makeSut()
+      const cabinResult = await sut.loadById(cabinId)
+      expect(cabinResult).toBeTruthy()
+      expect(cabinResult.name).toBe(cabin.name)
+      expect(cabinResult.maxCapacity).toBe(cabin.maxCapacity)
+      expect(cabinResult.description).toBe(cabin.description)
+      expect(cabinResult.discount).toBe(cabin.discount)
+      expect(cabinResult.id).toBe(cabinId)
+      expect(cabinResult.image).toBe(cabin.image)
+    })
+  })
 })

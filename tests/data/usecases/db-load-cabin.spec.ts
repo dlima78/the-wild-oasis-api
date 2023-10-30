@@ -18,7 +18,7 @@ const makeSut = (): SutTypes => {
 
 const id = faker.string.uuid()
 
-describe('DbLoadCabinById usecase', () => {
+describe('DbLoadCabin usecase', () => {
   test('should call LoadCabinByIdRepository with correct id', async () => {
     const { sut, loadCabinByIdRepositorySpy } = makeSut()
     const cabinId = id

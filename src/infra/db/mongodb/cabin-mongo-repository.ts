@@ -1,4 +1,5 @@
 import {
+  type LoadCabinByIdRepository,
   type AddCabinRepository,
   type LoadCabinsRepository,
   type SaveCabinRepository
@@ -7,7 +8,11 @@ import { MongoHelper } from './mongo-helper'
 import { ObjectId } from 'mongodb'
 
 export class CabinMongoRepository
-implements AddCabinRepository, SaveCabinRepository, LoadCabinsRepository {
+implements
+    AddCabinRepository,
+    SaveCabinRepository,
+    LoadCabinsRepository,
+    LoadCabinByIdRepository {
   async add (data: AddCabinRepository.Params): Promise<boolean> {
     const cabinCollection = MongoHelper.getCollection('cabins')
     const result = await cabinCollection.insertOne(data)
@@ -40,5 +45,11 @@ implements AddCabinRepository, SaveCabinRepository, LoadCabinsRepository {
     const cabinCollection = MongoHelper.getCollection('cabins')
     const cabins = await cabinCollection.find({}).toArray()
     return MongoHelper.mapCollection(cabins)
+  }
+
+  async loadById (id: string): Promise<LoadCabinByIdRepository.Result> {
+    const cabinCollection = MongoHelper.getCollection('cabins')
+    const cabin = await cabinCollection.findOne({ _id: new ObjectId(id) })
+    return MongoHelper.map(cabin)
   }
 }

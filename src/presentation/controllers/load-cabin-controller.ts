@@ -1,17 +1,15 @@
 import { type LoadCabin } from '@/domain/usecases'
 import { type Controller, type HttpResponse } from '@/presentation/protocols'
-import { noContent, ok, serverError } from '@/presentation/helpers'
+import { ok, serverError } from '@/presentation/helpers'
 
 export class LoadCabinController implements Controller {
   constructor (private readonly loadCabin: LoadCabin) {}
 
   async handle (request: LoadCabinController.Request): Promise<HttpResponse> {
     try {
-      const cabinModel = await this.loadCabin.loadById(request.id)
-      if (cabinModel) {
-        return ok(cabinModel)
-      }
-      return noContent()
+      const { cabinId } = request
+      const cabinModel = await this.loadCabin.loadById(cabinId)
+      return ok(cabinModel)
     } catch (error) {
       return serverError(error as Error)
     }
@@ -20,6 +18,6 @@ export class LoadCabinController implements Controller {
 
 export namespace LoadCabinController {
   export type Request = {
-    id: string
+    cabinId: string
   }
 }

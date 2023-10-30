@@ -42,10 +42,4 @@ describe('DbLoadCabin usecase', () => {
     const cabin = await sut.loadById(id)
     expect(cabin).toEqual(loadCabinByIdRepositorySpy.result)
   })
-
-  test('should ', async () => {
-    const { sut, loadCabinByIdRepositorySpy } = makeSut()
-    const cabin = await sut.loadById(id)
-    expect(cabin).toEqual(loadCabinByIdRepositorySpy.result)
-  })
 })

@@ -6,8 +6,8 @@ export class DbLoadCabin implements LoadCabin {
     private readonly loadCabinByIdRepository: LoadCabinByIdRepository
   ) {}
 
-  async loadById (id: string): Promise<LoadCabin.Result> {
-    const cabin = await this.loadCabinByIdRepository.loadById(id)
+  async loadById (cabinId: string): Promise<LoadCabin.Result> {
+    const cabin = await this.loadCabinByIdRepository.loadById(cabinId)
     return cabin
   }
 }

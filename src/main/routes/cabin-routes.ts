@@ -9,6 +9,7 @@ import {
 import { adminAuth, auth } from '@/main/middlewares'
 
 export default (router: Router): void => {
+  router.get('/cabin/:cabinId', auth, adaptRoute(makeLoadCabinController()))
   router.post('/cabin', adminAuth, adaptRoute(makeAddCabinController()))
   router.put(
     '/cabin/:cabinId',
@@ -16,5 +17,4 @@ export default (router: Router): void => {
     adaptRoute(makeSaveCabinController())
   )
   router.get('/cabins', auth, adaptRoute(makeLoadCabinsController()))
-  router.get('/cabin/:cabinId', auth, adaptRoute(makeLoadCabinController()))
 }

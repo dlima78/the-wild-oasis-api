@@ -1,12 +1,12 @@
 import { type CabinModel } from '@/domain/models'
 
-export interface SaveCabin {
-  save: (data: SaveCabin.Params) => Promise<void>
+export interface UpdateCabin {
+  update: (params: UpdateCabin.Params) => Promise<UpdateCabin.Result>
 }
 
-export namespace SaveCabin {
+export namespace UpdateCabin {
   export type Params = {
-    id?: string
+    cabinId: string
     name: string
     maxCapacity: number
     regularPrice: number

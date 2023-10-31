@@ -1,8 +1,9 @@
-import { type SaveCabin } from '@/domain/usecases/save-cabin'
+import { type UpdateCabin } from '@/domain/usecases/update-cabin'
 import { faker } from '@faker-js/faker'
 import { type CabinModel } from '../models'
+import { type AddCabin } from '../usecases'
 
-export const mockAddCabinParams = (): SaveCabin.Params => ({
+export const mockAddCabinParams = (): AddCabin.Params => ({
   name: faker.person.fullName(),
   maxCapacity: faker.number.int(),
   regularPrice: faker.number.int(),
@@ -10,17 +11,8 @@ export const mockAddCabinParams = (): SaveCabin.Params => ({
   description: faker.lorem.text(),
   image: faker.image.url()
 })
-export const mockSaveCabinParamsWithId = (): SaveCabin.Params => ({
-  id: faker.string.uuid(),
-  name: faker.person.fullName(),
-  maxCapacity: faker.number.int(),
-  regularPrice: faker.number.int(),
-  discount: faker.number.int(),
-  description: faker.lorem.text(),
-  image: faker.image.url()
-})
-
-export const mockSaveCabinParamsWithoutId = (): SaveCabin.Params => ({
+export const mockUpdateCabinParams = (): UpdateCabin.Params => ({
+  cabinId: faker.string.uuid(),
   name: faker.person.fullName(),
   maxCapacity: faker.number.int(),
   regularPrice: faker.number.int(),

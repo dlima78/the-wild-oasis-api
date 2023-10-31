@@ -1,11 +1,11 @@
 import {
-  type SaveCabinRepository,
+  type UpdateCabinRepository,
   type LoadCabinsRepository,
   type AddCabinRepository,
   type LoadCabinByIdRepository
 } from '@/data/protocols'
 import { type CabinModel } from '@/domain/models'
-import { mockCabinModels } from '@/tests/domain/mocks'
+import { mockCabinModel, mockCabinModels } from '@/tests/domain/mocks'
 import { faker } from '@faker-js/faker'
 
 export class LoadCabinsRepositorySpy implements LoadCabinsRepository {
@@ -33,17 +33,19 @@ export class LoadCabinByIdRepositorySpy implements LoadCabinByIdRepository {
   }
 }
 
-export class SaveCabinRepositorySpy implements SaveCabinRepository {
-  data!: SaveCabinRepository.Params
-  async save (data: SaveCabinRepository.Params): Promise<void> {
+export class UpdateCabinRepositorySpy implements UpdateCabinRepository {
+  data!: UpdateCabinRepository.Params
+  result = mockCabinModel()
+  async update (data: UpdateCabinRepository.Params): Promise<UpdateCabinRepository.Result> {
     this.data = data
+    return this.result
   }
 }
 
 export class AddCabinRepositorySpy implements AddCabinRepository {
   data!: AddCabinRepository.Params
   result = true
-  async add (data: SaveCabinRepository.Params): Promise<boolean> {
+  async add (data: AddCabinRepository.Params): Promise<boolean> {
     this.data = data
     return this.result
   }

@@ -1,5 +1,5 @@
 export * from './add-account'
-export * from './save-cabin'
+export * from './update-cabin'
 export * from './authentication'
 export * from './load-account-by-token'
 export * from './load-cabins'

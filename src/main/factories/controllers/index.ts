@@ -1,5 +1,4 @@
-export * from './save-cabin-controller-factory'
-export * from './save-cabin-validation-factory'
+export * from './update-cabin-controller-factory'
 export * from './signup-controller-factory'
 export * from './signup-validation-factory'
 export * from './login-controller-factory'

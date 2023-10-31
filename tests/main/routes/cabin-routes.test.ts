@@ -5,11 +5,7 @@ import env from '@/main/config/env'
 import { type Collection } from 'mongodb'
 import request from 'supertest'
 import jwt from 'jsonwebtoken'
-import {
-  mockAddCabinParams,
-  mockSaveCabinParamsWithoutId
-} from '@/tests/domain/mocks'
-import { faker } from '@faker-js/faker'
+import { mockAddCabinParams } from '@/tests/domain/mocks'
 
 let cabinCollection: Collection
 let accountCollection: Collection
@@ -82,44 +78,6 @@ describe('Cabin Routes', () => {
     })
   })
 
-  describe('PUT/cabin/:cabinId', () => {
-    test('should return 403 on save cabin', async () => {
-      await request(app)
-        .put('/api/cabin/any_id')
-        .send({
-          name: 'Cabin01',
-          maxCapacity: 4,
-          regularPrice: 30,
-          discount: 5,
-          description: 'A Cabin'
-        })
-        .expect(403)
-    })
-
-    test('should return 204 on save cabin with valid accessToken', async () => {
-      const accessToken = await mockAccessToken()
-      const res = await cabinCollection.insertOne({
-        name: faker.person.fullName(),
-        maxCapacity: faker.number.int(),
-        regularPrice: faker.number.int(),
-        discount: faker.number.int(),
-        description: faker.lorem.text(),
-        image: faker.image.url()
-      })
-      await request(app)
-        .put(`/api/cabin/${res.insertedId.toHexString()}`)
-        .set('x-access-token', accessToken)
-        .send({
-          name: 'Cabin01',
-          maxCapacity: 4,
-          regularPrice: 30,
-          discount: 5,
-          description: 'A Cabin'
-        })
-        .expect(204)
-    })
-  })
-
   describe('GET/cabins', () => {
     test('should return 403 on load cabins without accessToken', async () => {
       await request(app).get('/api/cabins').expect(403)
@@ -127,8 +85,8 @@ describe('Cabin Routes', () => {
 
     test('Should return 200 on load cabins with valid accessToken', async () => {
       await cabinCollection.insertMany([
-        mockSaveCabinParamsWithoutId(),
-        mockSaveCabinParamsWithoutId()
+        mockAddCabinParams(),
+        mockAddCabinParams()
       ])
       const accessToken = await mockAccessToken()
       await request(app)
@@ -157,6 +115,25 @@ describe('Cabin Routes', () => {
       await request(app)
         .get(`/api/cabin/${res.insertedId.toHexString()}`)
         .set('x-access-token', accessToken)
+        .expect(200)
+    })
+  })
+
+  describe('PATCH/cabin/:cabinId', () => {
+    test('should return 403 on load cabin without accessToken', async () => {
+      await request(app).patch('/api/cabin/anyId').expect(403)
+    })
+
+    test('Should return 200 on load cabin with valid accessToken ', async () => {
+      const accessToken = await mockAccessToken()
+      const cabinParams = mockAddCabinParams()
+      const res = await cabinCollection.insertOne(cabinParams)
+      await request(app)
+        .patch(`/api/cabin/${res.insertedId.toHexString()}`)
+        .set('x-access-token', accessToken)
+        .send({
+          name: 'Cabin01'
+        })
         .expect(200)
     })
   })

@@ -1,5 +1,6 @@
 {
-  "editor.formatOnSave": true,
   "standard.engine": "ts-standard",
-  "vscode-graphql-execution.debug": false
+  "vscode-graphql-execution.debug": false,
+  "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+  "typescript.format.insertSpaceBeforeFunctionParenthesis": true
 }

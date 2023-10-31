@@ -2,7 +2,7 @@ import {
   type LoadCabinByIdRepository,
   type AddCabinRepository,
   type LoadCabinsRepository,
-  type SaveCabinRepository
+  type UpdateCabinRepository
 } from '@/data/protocols'
 import { MongoHelper } from './mongo-helper'
 import { ObjectId } from 'mongodb'
@@ -10,35 +10,13 @@ import { ObjectId } from 'mongodb'
 export class CabinMongoRepository
 implements
     AddCabinRepository,
-    SaveCabinRepository,
     LoadCabinsRepository,
-    LoadCabinByIdRepository {
+    LoadCabinByIdRepository,
+    UpdateCabinRepository {
   async add (data: AddCabinRepository.Params): Promise<boolean> {
     const cabinCollection = MongoHelper.getCollection('cabins')
     const result = await cabinCollection.insertOne(data)
     return result !== null
-  }
-
-  async save (data: SaveCabinRepository.Params): Promise<void> {
-    const cabinCollection = MongoHelper.getCollection('cabins')
-    await cabinCollection.findOneAndUpdate(
-      {
-        _id: new ObjectId(data.id)
-      },
-      {
-        $set: {
-          name: data.name,
-          maxCapacity: data.maxCapacity,
-          regularPrice: data.regularPrice,
-          discount: data.discount,
-          description: data.description,
-          image: data.image
-        }
-      },
-      {
-        upsert: true
-      }
-    )
   }
 
   async loadAll (): Promise<LoadCabinsRepository.Result> {
@@ -51,5 +29,18 @@ implements
     const cabinCollection = MongoHelper.getCollection('cabins')
     const cabin = await cabinCollection.findOne({ _id: new ObjectId(id) })
     return MongoHelper.map(cabin)
+  }
+
+  async update (
+    data: UpdateCabinRepository.Params
+  ): Promise<UpdateCabinRepository.Result> {
+    const cabinCollection = MongoHelper.getCollection('cabins')
+    const { cabinId, ...dataWithoutId } = data
+    const updatedCabin = await cabinCollection.findOneAndUpdate(
+      { _id: new ObjectId(data.cabinId) },
+      { $set: { ...dataWithoutId } },
+      { returnDocument: 'after', upsert: false }
+    )
+    return MongoHelper.map(updatedCabin.value)
   }
 }

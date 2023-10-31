@@ -2,17 +2,20 @@ import {
   type LoadCabinByIdRepository,
   type AddCabinRepository,
   type LoadCabinsRepository,
-  type UpdateCabinRepository
+  type UpdateCabinRepository,
+  type DeleteCabinRepository
 } from '@/data/protocols'
 import { MongoHelper } from './mongo-helper'
 import { ObjectId } from 'mongodb'
+import { type DeleteCabin } from '@/domain/usecases'
 
 export class CabinMongoRepository
 implements
     AddCabinRepository,
     LoadCabinsRepository,
     LoadCabinByIdRepository,
-    UpdateCabinRepository {
+    UpdateCabinRepository,
+    DeleteCabinRepository {
   async add (data: AddCabinRepository.Params): Promise<boolean> {
     const cabinCollection = MongoHelper.getCollection('cabins')
     const result = await cabinCollection.insertOne(data)
@@ -29,6 +32,12 @@ implements
     const cabinCollection = MongoHelper.getCollection('cabins')
     const cabin = await cabinCollection.findOne({ _id: new ObjectId(id) })
     return MongoHelper.map(cabin)
+  }
+
+  async delete (cabinId: DeleteCabin.Param): Promise<boolean> {
+    const cabinCollection = MongoHelper.getCollection('cabins')
+    const result = await cabinCollection.deleteOne(cabinId)
+    return result !== null
   }
 
   async update (

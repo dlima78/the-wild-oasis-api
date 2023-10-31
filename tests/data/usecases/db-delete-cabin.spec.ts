@@ -36,4 +36,13 @@ describe('DbUpdateCabin', () => {
     const isValid = await sut.delete(mockDeleteCabinParam())
     expect(isValid).toBe(false)
   })
+
+  test('should throw if DeleteCabinRepository throws', async () => {
+    const { sut, deleteCabinRepositorySpy } = makeSut()
+    jest.spyOn(deleteCabinRepositorySpy, 'delete').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.delete(mockDeleteCabinParam())
+    await expect(promise).rejects.toThrow()
+  })
 })

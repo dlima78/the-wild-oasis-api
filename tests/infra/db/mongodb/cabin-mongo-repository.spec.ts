@@ -95,4 +95,15 @@ describe('CabinMongoRepository', () => {
       expect(updatedCabin.image).toBe(cabin.image)
     })
   })
+
+  describe('delete()', () => {
+    test('should delete a Cabin by id', async () => {
+      const cabin = mockAddCabinParams()
+      const res = await cabinCollection.insertOne(cabin)
+      const cabinId = res.insertedId.toHexString()
+      const sut = makeSut()
+      const cabinResult = await sut.delete({ cabinId })
+      expect(cabinResult).toBe(true)
+    })
+  })
 })

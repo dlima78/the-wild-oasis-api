@@ -2,9 +2,11 @@ import {
   type UpdateCabinRepository,
   type LoadCabinsRepository,
   type AddCabinRepository,
-  type LoadCabinByIdRepository
+  type LoadCabinByIdRepository,
+  type DeleteCabinRepository
 } from '@/data/protocols'
 import { type CabinModel } from '@/domain/models'
+import { type DeleteCabin } from '@/domain/usecases'
 import { mockCabinModel, mockCabinModels } from '@/tests/domain/mocks'
 import { faker } from '@faker-js/faker'
 
@@ -47,6 +49,15 @@ export class AddCabinRepositorySpy implements AddCabinRepository {
   result = true
   async add (data: AddCabinRepository.Params): Promise<boolean> {
     this.data = data
+    return this.result
+  }
+}
+
+export class DeleteCabinRepositorySpy implements DeleteCabinRepository {
+  cabinId!: DeleteCabinRepository.Param
+  result = true
+  async delete (cabinId: DeleteCabin.Param): Promise<boolean> {
+    this.cabinId = cabinId
     return this.result
   }
 }

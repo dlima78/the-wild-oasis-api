@@ -1,7 +1,7 @@
 import { type UpdateCabin } from '@/domain/usecases/update-cabin'
 import { faker } from '@faker-js/faker'
 import { type CabinModel } from '../models'
-import { type AddCabin } from '../usecases'
+import { type DeleteCabin, type AddCabin } from '../usecases'
 
 export const mockAddCabinParams = (): AddCabin.Params => ({
   name: faker.person.fullName(),
@@ -35,3 +35,7 @@ export const mockCabinModels = (): CabinModel[] => [
   mockCabinModel(),
   mockCabinModel()
 ]
+
+export const mockDeleteCabinParam = (): DeleteCabin.Param => ({
+  cabinId: faker.string.uuid()
+})

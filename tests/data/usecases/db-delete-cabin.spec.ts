@@ -25,8 +25,15 @@ describe('DbUpdateCabin', () => {
   })
 
   test('should return true if DeleteCabinRepository succeeds', async () => {
-    const { sut, deleteCabinRepositorySpy } = makeSut()
+    const { sut } = makeSut()
     const isValid = await sut.delete(mockDeleteCabinParam())
-    expect(isValid).toBe(deleteCabinRepositorySpy.result)
+    expect(isValid).toBe(true)
+  })
+
+  test('should return false if DeleteCabinRepository return false', async () => {
+    const { sut, deleteCabinRepositorySpy } = makeSut()
+    deleteCabinRepositorySpy.result = false
+    const isValid = await sut.delete(mockDeleteCabinParam())
+    expect(isValid).toBe(false)
   })
 })

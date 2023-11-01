@@ -148,5 +148,9 @@ describe('Cabin Routes', () => {
         .set('x-access-token', accessToken)
         .expect(204)
     })
+
+    test('should return 403 on delete cabin without accessToken', async () => {
+      await request(app).delete('/api/cabin/anyId').expect(403)
+    })
   })
 })

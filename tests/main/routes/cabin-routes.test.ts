@@ -137,4 +137,16 @@ describe('Cabin Routes', () => {
         .expect(200)
     })
   })
+
+  describe('DELETE/cabin/:cabinId', () => {
+    test('Should return 204 on delete cabin with valid accessToken ', async () => {
+      const accessToken = await mockAccessToken()
+      const cabinParams = mockAddCabinParams()
+      const res = await cabinCollection.insertOne(cabinParams)
+      await request(app)
+        .delete(`/api/cabin/${res.insertedId.toHexString()}`)
+        .set('x-access-token', accessToken)
+        .expect(204)
+    })
+  })
 })

@@ -3,7 +3,7 @@ import {
   type Controller,
   type Validation
 } from '@/presentation/protocols'
-import { badRequest } from '@/presentation/helpers'
+import { badRequest, noContent } from '@/presentation/helpers'
 import { type AddGuest } from '@/domain/usecases'
 
 export class AddGuestController implements Controller {
@@ -18,10 +18,7 @@ export class AddGuestController implements Controller {
       return badRequest(error)
     }
     await this.addGuest.add(request)
-    return {
-      statusCode: 0,
-      body: ''
-    }
+    return noContent()
   }
 }
 

@@ -3,7 +3,7 @@ import {
   type Controller,
   type Validation
 } from '@/presentation/protocols'
-import { badRequest, noContent } from '@/presentation/helpers'
+import { badRequest, noContent, serverError } from '@/presentation/helpers'
 import { type AddGuest } from '@/domain/usecases'
 
 export class AddGuestController implements Controller {
@@ -13,12 +13,16 @@ export class AddGuestController implements Controller {
   ) {}
 
   async handle (request: AddGuestController.Request): Promise<HttpResponse> {
-    const error = this.validation.validate(request)
-    if (error) {
-      return badRequest(error)
+    try {
+      const error = this.validation.validate(request)
+      if (error) {
+        return badRequest(error)
+      }
+      await this.addGuest.add(request)
+      return noContent()
+    } catch (error) {
+      return serverError(error as Error)
     }
-    await this.addGuest.add(request)
-    return noContent()
   }
 }
 

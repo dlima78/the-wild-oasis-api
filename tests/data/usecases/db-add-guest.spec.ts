@@ -40,4 +40,13 @@ describe('DbAddAccount Usecase', () => {
     const isValid = await sut.add(mockAddGuestParams())
     expect(isValid).toBe(true)
   })
+
+  test('should throw if AddGuestRepository throws', async () => {
+    const { sut, addGuestRepositorySpy } = makeSut()
+    jest.spyOn(addGuestRepositorySpy, 'add').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.add(mockAddGuestParams())
+    await expect(promise).rejects.toThrow()
+  })
 })

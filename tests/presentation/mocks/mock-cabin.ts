@@ -1,7 +1,8 @@
 import {
   type LoadCabins,
   type AddCabin,
-  type LoadCabin
+  type LoadCabin,
+  type DeleteCabin
 } from '@/domain/usecases'
 import { mockCabinModel, mockCabinModels } from '@/tests/domain/mocks'
 
@@ -27,6 +28,15 @@ export class LoadCabinSpy implements LoadCabin {
   result: LoadCabin.Result = mockCabinModel()
   cabinId = ''
   async loadById (cabinId: string): Promise<LoadCabin.Result> {
+    this.cabinId = cabinId
+    return this.result
+  }
+}
+
+export class DeleteCabinSpy implements DeleteCabin {
+  result = true
+  cabinId = ''
+  async delete (cabinId: string): Promise<boolean> {
     this.cabinId = cabinId
     return this.result
   }

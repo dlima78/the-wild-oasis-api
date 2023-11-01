@@ -1,7 +1,7 @@
 import { DeleteCabinController } from '@/presentation/controllers'
 import { DeleteCabinSpy } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
-import { forbidden } from '@/presentation/helpers'
+import { forbidden, noContent } from '@/presentation/helpers'
 import { InvalidParamError } from '@/presentation/errors'
 
 type SutTypes = {
@@ -35,5 +35,11 @@ describe('DeleteCabin controller', () => {
     deleteCabinSpy.result = false
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(forbidden(new InvalidParamError('cabinId')))
+  })
+
+  test('should return 200 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(noContent())
   })
 })

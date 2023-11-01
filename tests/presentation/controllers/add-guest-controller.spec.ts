@@ -36,7 +36,7 @@ describe('Add Guest Controller', () => {
     expect(validationSpy.input).toEqual(request)
   })
 
-  test('should return 400 if Validtion fails', async () => {
+  test('should return 400 if Validation fails', async () => {
     const { sut, validationSpy } = makeSut()
     validationSpy.error = new Error()
     const httpResponse = await sut.handle(mockRequest())

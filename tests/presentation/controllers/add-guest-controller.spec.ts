@@ -1,7 +1,7 @@
 import { AddGuestController } from '@/presentation/controllers'
 import { AddGuestSpy, ValidationSpy } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
-import { badRequest } from '@/presentation/helpers'
+import { badRequest, noContent } from '@/presentation/helpers'
 
 const mockRequest = (): AddGuestController.Request => ({
   fullName: faker.person.fullName(),
@@ -48,5 +48,11 @@ describe('Add Guest Controller', () => {
     const request = mockRequest()
     await sut.handle(request)
     expect(addGuestSpy.params).toEqual(request)
+  })
+
+  test('should return 204 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(noContent())
   })
 })

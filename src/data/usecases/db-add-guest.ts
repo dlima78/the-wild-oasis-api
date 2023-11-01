@@ -7,7 +7,7 @@ export class DbAddGuest implements AddGuestRepository {
   ) {}
 
   async add (guestData: AddGuest.Params): Promise<boolean> {
-    await this.addGuestRepository.add(guestData)
-    return false
+    const isValid = await this.addGuestRepository.add(guestData)
+    return isValid
   }
 }

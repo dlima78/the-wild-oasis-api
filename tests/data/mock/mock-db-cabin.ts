@@ -6,7 +6,6 @@ import {
   type DeleteCabinRepository
 } from '@/data/protocols'
 import { type CabinModel } from '@/domain/models'
-import { type DeleteCabin } from '@/domain/usecases'
 import { mockCabinModel, mockCabinModels } from '@/tests/domain/mocks'
 import { faker } from '@faker-js/faker'
 
@@ -54,9 +53,9 @@ export class AddCabinRepositorySpy implements AddCabinRepository {
 }
 
 export class DeleteCabinRepositorySpy implements DeleteCabinRepository {
-  cabinId!: DeleteCabinRepository.Param
+  cabinId = ''
   result = true
-  async delete (cabinId: DeleteCabin.Param): Promise<boolean> {
+  async delete (cabinId: string): Promise<boolean> {
     this.cabinId = cabinId
     return this.result
   }

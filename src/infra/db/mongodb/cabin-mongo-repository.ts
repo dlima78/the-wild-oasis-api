@@ -7,7 +7,6 @@ import {
 } from '@/data/protocols'
 import { MongoHelper } from './mongo-helper'
 import { ObjectId } from 'mongodb'
-import { type DeleteCabin } from '@/domain/usecases'
 
 export class CabinMongoRepository
 implements
@@ -34,12 +33,6 @@ implements
     return MongoHelper.map(cabin)
   }
 
-  async delete (cabinId: DeleteCabin.Param): Promise<boolean> {
-    const cabinCollection = MongoHelper.getCollection('cabins')
-    const result = await cabinCollection.deleteOne(cabinId)
-    return result !== null
-  }
-
   async update (
     data: UpdateCabinRepository.Params
   ): Promise<UpdateCabinRepository.Result> {
@@ -51,5 +44,11 @@ implements
       { returnDocument: 'after', upsert: false }
     )
     return MongoHelper.map(updatedCabin.value)
+  }
+
+  async delete (cabinId: string): Promise<boolean> {
+    const cabinCollection = MongoHelper.getCollection('cabins')
+    const result = await cabinCollection.deleteOne({ _id: new ObjectId(cabinId) })
+    return !!result.deletedCount
   }
 }

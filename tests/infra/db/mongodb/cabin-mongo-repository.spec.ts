@@ -102,8 +102,15 @@ describe('CabinMongoRepository', () => {
       const res = await cabinCollection.insertOne(cabin)
       const cabinId = res.insertedId.toHexString()
       const sut = makeSut()
-      const cabinResult = await sut.delete({ cabinId })
+      const cabinResult = await sut.delete(cabinId)
       expect(cabinResult).toBe(true)
+    })
+
+    test('should return false with invalid cabinId', async () => {
+      const cabinId = '65423fcd0f68c2f403f10d5f'
+      const sut = makeSut()
+      const cabinResult = await sut.delete(cabinId)
+      expect(cabinResult).toBe(false)
     })
   })
 })

@@ -34,4 +34,10 @@ describe('DbAddAccount Usecase', () => {
     const isValid = await sut.add(mockAddGuestParams())
     expect(isValid).toBe(false)
   })
+
+  test('should return true on success', async () => {
+    const { sut } = makeSut()
+    const isValid = await sut.add(mockAddGuestParams())
+    expect(isValid).toBe(true)
+  })
 })

@@ -1,4 +1,6 @@
 import { type AddGuest } from '@/domain/usecases'
+import { mockGuestModel } from '@/tests/domain/mocks'
+import { type LoadGuestsRepository } from '../protocols'
 
 export class AddGuestRepositorySpy implements AddGuest {
   guestData: AddGuest.Params = {
@@ -12,6 +14,13 @@ export class AddGuestRepositorySpy implements AddGuest {
   result = true
   async add (guestData: AddGuest.Params): Promise<boolean> {
     this.guestData = guestData
+    return this.result
+  }
+}
+
+export class LoadGuestsRepositorySpy implements LoadGuestsRepository {
+  result = [mockGuestModel(), mockGuestModel()]
+  async loadAll (): Promise<LoadGuestsRepository.Result> {
     return this.result
   }
 }

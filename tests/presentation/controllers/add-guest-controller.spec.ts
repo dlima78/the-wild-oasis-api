@@ -1,7 +1,7 @@
 import { AddGuestController } from '@/presentation/controllers'
 import { AddGuestSpy, ValidationSpy } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
-import { badRequest, noContent } from '@/presentation/helpers'
+import { badRequest, noContent, serverError } from '@/presentation/helpers'
 
 const mockRequest = (): AddGuestController.Request => ({
   fullName: faker.person.fullName(),
@@ -54,5 +54,14 @@ describe('Add Guest Controller', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(noContent())
+  })
+
+  test('should return 500 if AddCabin throws', async () => {
+    const { sut, addGuestSpy } = makeSut()
+    jest.spyOn(addGuestSpy, 'add').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })

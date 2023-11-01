@@ -27,4 +27,11 @@ describe('DbAddAccount Usecase', () => {
     await sut.add(addGuestParams)
     expect(addGuestRepositorySpy.guestData).toEqual(addGuestParams)
   })
+
+  test('should return false if AddGuestRepository returns false', async () => {
+    const { sut, addGuestRepositorySpy } = makeSut()
+    addGuestRepositorySpy.result = false
+    const isValid = await sut.add(mockAddGuestParams())
+    expect(isValid).toBe(false)
+  })
 })

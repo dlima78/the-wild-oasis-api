@@ -1,5 +1,5 @@
 import { AddGuestController } from '@/presentation/controllers'
-import { ValidationSpy } from '@/tests/presentation/mocks'
+import { AddGuestSpy, ValidationSpy } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
 import { badRequest } from '@/presentation/helpers'
 
@@ -13,15 +13,18 @@ const mockRequest = (): AddGuestController.Request => ({
 
 type SutTypes = {
   validationSpy: ValidationSpy
+  addGuestSpy: AddGuestSpy
   sut: AddGuestController
 }
 
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy()
-  const sut = new AddGuestController(validationSpy)
+  const addGuestSpy = new AddGuestSpy()
+  const sut = new AddGuestController(validationSpy, addGuestSpy)
   return {
     sut,
-    validationSpy
+    validationSpy,
+    addGuestSpy
   }
 }
 
@@ -38,5 +41,12 @@ describe('Add Guest Controller', () => {
     validationSpy.error = new Error()
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(badRequest(validationSpy.error))
+  })
+
+  test('should call AddGuest with correct values', async () => {
+    const { sut, addGuestSpy } = makeSut()
+    const request = mockRequest()
+    await sut.handle(request)
+    expect(addGuestSpy.params).toEqual(request)
   })
 })

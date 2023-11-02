@@ -5,6 +5,7 @@ import env from '@/main/config/env'
 import { type Collection } from 'mongodb'
 import request from 'supertest'
 import jwt from 'jsonwebtoken'
+import { mockAddGuestParams } from '@/tests/domain/mocks'
 
 let guestCollection: Collection
 let accountCollection: Collection
@@ -72,6 +73,32 @@ describe('Guest Routes', () => {
           countryFlag: 'ANY',
           nationalId: '55'
         })
+        .expect(204)
+    })
+  })
+
+  describe('GET/guests', () => {
+    test('should return 403 on add guest', async () => {
+      await request(app)
+        .get('/api/guests')
+        .expect(403)
+    })
+    test('should return 200 on load guests with valid accessToken', async () => {
+      const accessToken = await mockAccessToken()
+      await guestCollection.insertMany(
+        [mockAddGuestParams(),
+          mockAddGuestParams()
+        ])
+      await request(app)
+        .get('/api/guests')
+        .set('x-access-token', accessToken)
+        .expect(200)
+    })
+    test('should return 204 on add guest with valid accessToken', async () => {
+      const accessToken = await mockAccessToken()
+      await request(app)
+        .get('/api/guests')
+        .set('x-access-token', accessToken)
         .expect(204)
     })
   })

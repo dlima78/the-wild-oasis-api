@@ -1,6 +1,6 @@
 import { LoadGuestsController } from '@/presentation/controllers'
 import { LoadGuestsSpy } from '@/tests/presentation/mocks'
-import { noContent, ok } from '@/presentation/helpers'
+import { noContent, ok, serverError } from '@/presentation/helpers'
 
 type SutTypes = {
   loadGuestsSpy: LoadGuestsSpy
@@ -28,5 +28,14 @@ describe('Load Guests Controller', () => {
     loadGuestsSpy.result = []
     const httpResponse = await sut.handle()
     expect(httpResponse).toEqual(noContent())
+  })
+
+  test('should return 500 if LoadGuests throws', async () => {
+    const { sut, loadGuestsSpy } = makeSut()
+    jest.spyOn(loadGuestsSpy, 'load').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle()
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })

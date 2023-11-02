@@ -55,4 +55,20 @@ describe('GuestMongoRepository', () => {
       expect(surveys.length).toBe(0)
     })
   })
+
+  describe('loadById()', () => {
+    test('should load guest by id on success', async () => {
+      const addGuestModel = mockAddGuestParams()
+      const res = await guestCollection.insertOne(addGuestModel)
+      const sut = makeSut()
+      const guest = await sut.loadById(res.insertedId.toHexString())
+      expect(guest).toBeTruthy()
+      expect(guest.id).toBeTruthy()
+      expect(addGuestModel.countryFlag).toBe(guest.countryFlag)
+      expect(addGuestModel.email).toBe(guest.email)
+      expect(addGuestModel.fullName).toBe(guest.fullName)
+      expect(addGuestModel.nationalId).toBe(guest.nationalId)
+      expect(addGuestModel.nationality).toBe(guest.nationality)
+    })
+  })
 })

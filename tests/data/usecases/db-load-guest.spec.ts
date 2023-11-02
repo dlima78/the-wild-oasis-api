@@ -24,4 +24,10 @@ describe('DbLoadGuests usecase', () => {
     await sut.load(cabinId)
     expect(loadGuestByIdRepositorySpy.cabinId).toBe(cabinId)
   })
+
+  test('should return a Guest on success', async () => {
+    const { sut, loadGuestByIdRepositorySpy } = makeSut()
+    const guest = await sut.load(cabinId)
+    expect(guest).toEqual(loadGuestByIdRepositorySpy.result)
+  })
 })

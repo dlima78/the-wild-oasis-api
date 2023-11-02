@@ -27,9 +27,9 @@ export class LoadGuestsRepositorySpy implements LoadGuestsRepository {
 
 export class LoadGuestByIdRepositorySpy implements LoadGuestByIdRepository {
   result = mockGuestModel()
-  cabinId = ''
+  guestId = ''
   async loadById (cabinId: string): Promise<LoadGuestByIdRepository.Result> {
-    this.cabinId = cabinId
+    this.guestId = cabinId
     return this.result
   }
 }

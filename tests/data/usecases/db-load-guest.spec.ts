@@ -16,18 +16,29 @@ const makeSut = (): SutTypes => {
   }
 }
 
-const cabinId = faker.string.uuid()
+const guestId = faker.string.uuid()
 
 describe('DbLoadGuests usecase', () => {
   test('should call LoadGuestByIdRepository with correct id', async () => {
     const { sut, loadGuestByIdRepositorySpy } = makeSut()
-    await sut.load(cabinId)
-    expect(loadGuestByIdRepositorySpy.cabinId).toBe(cabinId)
+    await sut.load(guestId)
+    expect(loadGuestByIdRepositorySpy.guestId).toBe(guestId)
   })
 
   test('should return a Guest on success', async () => {
     const { sut, loadGuestByIdRepositorySpy } = makeSut()
-    const guest = await sut.load(cabinId)
+    const guest = await sut.load(guestId)
     expect(guest).toEqual(loadGuestByIdRepositorySpy.result)
+  })
+
+  test('should throw if LoadCabinByIdThrows', async () => {
+    const { sut, loadGuestByIdRepositorySpy } = makeSut()
+    jest
+      .spyOn(loadGuestByIdRepositorySpy, 'loadById')
+      .mockImplementationOnce(() => {
+        throw new Error()
+      })
+    const promise = sut.load(guestId)
+    await expect(promise).rejects.toThrow()
   })
 })

@@ -7,7 +7,7 @@ export class LoadGuestController implements Controller {
 
   async handle (request: LoadGuestController.Request): Promise<HttpResponse> {
     try {
-      const guest = await this.loadGuest.load(request.cabinId)
+      const guest = await this.loadGuest.load(request.guestId)
       return ok(guest)
     } catch (error) {
       return serverError(error as Error)
@@ -17,6 +17,6 @@ export class LoadGuestController implements Controller {
 
 export namespace LoadGuestController {
   export type Request = {
-    cabinId: string
+    guestId: string
   }
 }

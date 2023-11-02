@@ -18,7 +18,7 @@ const makeSut = (): SutTypes => {
 }
 
 const mockRequest = (): LoadGuestController.Request => ({
-  cabinId: faker.string.uuid()
+  guestId: faker.string.uuid()
 })
 
 describe('Load Guests Controller', () => {
@@ -26,7 +26,7 @@ describe('Load Guests Controller', () => {
     const { sut, loadGuestSpy } = makeSut()
     const request = mockRequest()
     await sut.handle(request)
-    expect(loadGuestSpy.cabinId).toBe(request.cabinId)
+    expect(loadGuestSpy.guestId).toBe(request.guestId)
   })
 
   test('should return 200 on success', async () => {

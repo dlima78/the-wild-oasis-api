@@ -28,9 +28,9 @@ export class LoadGuestsSpy implements LoadGuests {
 
 export class LoadGuestSpy implements LoadGuest {
   result = mockGuestModel()
-  cabinId = ''
-  async load (cabinId: string): Promise<LoadGuest.Result> {
-    this.cabinId = cabinId
+  guestId = ''
+  async load (guestId: string): Promise<LoadGuest.Result> {
+    this.guestId = guestId
     return this.result
   }
 }

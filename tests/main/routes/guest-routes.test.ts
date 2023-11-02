@@ -102,4 +102,20 @@ describe('Guest Routes', () => {
         .expect(204)
     })
   })
+
+  describe('GET/guest/:guestId', () => {
+    test('should return 403 on add guest', async () => {
+      await request(app)
+        .get('/api/guest/any_id')
+        .expect(403)
+    })
+    test('should return 200 on load guests with valid accessToken', async () => {
+      const accessToken = await mockAccessToken()
+      const res = await guestCollection.insertOne(mockAddGuestParams())
+      await request(app)
+        .get(`/api/guest/${res.insertedId.toHexString()}`)
+        .set('x-access-token', accessToken)
+        .expect(200)
+    })
+  })
 })

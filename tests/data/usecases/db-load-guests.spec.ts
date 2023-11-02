@@ -28,4 +28,15 @@ describe('DbLoadGuests usecase', () => {
     const guests = await sut.load()
     expect(guests).toEqual(loadGuestsRepositorySpy.result)
   })
+
+  test('should throw if LoadGuestsRepository throws', async () => {
+    const { sut, loadGuestsRepositorySpy } = makeSut()
+    jest
+      .spyOn(loadGuestsRepositorySpy, 'loadAll')
+      .mockImplementationOnce(() => {
+        throw new Error()
+      })
+    const promise = sut.load()
+    await expect(promise).rejects.toThrow()
+  })
 })

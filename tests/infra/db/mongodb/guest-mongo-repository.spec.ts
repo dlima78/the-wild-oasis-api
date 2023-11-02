@@ -48,5 +48,11 @@ describe('GuestMongoRepository', () => {
       expect(guests[0].nationalId).toBe(addGuestModels[0].nationalId)
       expect(guests[1].nationalId).toBe(addGuestModels[1].nationalId)
     })
+
+    test('Should load empty list', async () => {
+      const sut = makeSut()
+      const surveys = await sut.loadAll()
+      expect(surveys.length).toBe(0)
+    })
   })
 })

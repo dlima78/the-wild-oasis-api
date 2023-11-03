@@ -1,6 +1,6 @@
 import { type DeleteGuest } from '@/domain/usecases'
 import { type Controller, type HttpResponse } from '@/presentation/protocols'
-import { forbidden, serverError } from '@/presentation/helpers'
+import { forbidden, noContent, serverError } from '@/presentation/helpers'
 import { InvalidParamError } from '@/presentation/errors'
 
 export class DeleteGuestController implements Controller {
@@ -12,10 +12,7 @@ export class DeleteGuestController implements Controller {
       if (!isDeleted) {
         return forbidden(new InvalidParamError('guestId'))
       }
-      return {
-        statusCode: 0,
-        body: ''
-      }
+      return noContent()
     } catch (error) {
       return serverError(error as Error)
     }

@@ -141,4 +141,20 @@ describe('Guest Routes', () => {
         .expect(200)
     })
   })
+
+  describe('DELETE/guest/:guestId', () => {
+    test('Should return 204 on delete guest with valid accessToken ', async () => {
+      const accessToken = await mockAccessToken()
+      const guestParams = mockAddGuestParams()
+      const res = await guestCollection.insertOne(guestParams)
+      await request(app)
+        .delete(`/api/guest/${res.insertedId.toHexString()}`)
+        .set('x-access-token', accessToken)
+        .expect(204)
+    })
+
+    test('should return 403 on delete guest without accessToken', async () => {
+      await request(app).delete('/api/guest/anyId').expect(403)
+    })
+  })
 })

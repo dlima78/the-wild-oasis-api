@@ -30,4 +30,11 @@ describe('DbUpdateGuest usecase', () => {
     const isValid = await sut.delete(guestId)
     expect(isValid).toBe(true)
   })
+
+  test('should return false if DeleteGuestRepository return false', async () => {
+    const { sut, deleteGuestRepositorySpy } = makeSut()
+    deleteGuestRepositorySpy.result = false
+    const isValid = await sut.delete(guestId)
+    expect(isValid).toBe(false)
+  })
 })

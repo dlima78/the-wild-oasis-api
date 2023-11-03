@@ -27,4 +27,13 @@ describe('DbUpdateAccount Usecase', () => {
     await sut.update(updateGuestParams)
     expect(updateGuestRepositorySpy.data).toEqual(updateGuestParams)
   })
+
+  test('should throw if UpdateGuestRepository throws', async () => {
+    const { sut, updateGuestRepositorySpy } = makeSut()
+    jest.spyOn(updateGuestRepositorySpy, 'update').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.update(mockUpdateGuestParams())
+    await expect(promise).rejects.toThrow()
+  })
 })

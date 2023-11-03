@@ -1,6 +1,7 @@
-import { type AddGuest } from '@/domain/usecases'
+import { type UpdateGuest, type AddGuest } from '@/domain/usecases'
 import { mockGuestModel } from '@/tests/domain/mocks'
-import { type LoadGuestByIdRepository, type LoadGuestsRepository } from '../protocols'
+import { type UpdateGuestRepository, type LoadGuestByIdRepository, type LoadGuestsRepository } from '../protocols'
+import { type GuestModel } from '@/domain/models'
 
 export class AddGuestRepositorySpy implements AddGuest {
   guestData: AddGuest.Params = {
@@ -30,6 +31,23 @@ export class LoadGuestByIdRepositorySpy implements LoadGuestByIdRepository {
   guestId = ''
   async loadById (cabinId: string): Promise<LoadGuestByIdRepository.Result> {
     this.guestId = cabinId
+    return this.result
+  }
+}
+
+export class UpdateGuestRepositorySpy implements UpdateGuestRepository {
+  data: UpdateGuest.Params = {
+    guestId: '',
+    fullName: '',
+    email: '',
+    nationality: '',
+    countryFlag: '',
+    nationalId: ''
+  }
+
+  result = mockGuestModel()
+  async update (data: UpdateGuest.Params): Promise<GuestModel> {
+    this.data = data
     return this.result
   }
 }

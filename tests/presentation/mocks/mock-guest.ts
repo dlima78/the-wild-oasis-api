@@ -1,5 +1,5 @@
 import { type GuestModel } from '@/domain/models'
-import { type LoadGuests, type AddGuest, type LoadGuest, type UpdateGuest } from '@/domain/usecases'
+import { type LoadGuests, type AddGuest, type LoadGuest, type UpdateGuest, type DeleteGuest } from '@/domain/usecases'
 import { mockGuestModel } from '@/tests/domain/mocks'
 
 export class AddGuestSpy implements AddGuest {
@@ -48,6 +48,15 @@ export class UpdateGuestSpy implements UpdateGuest {
 
   async update (params: UpdateGuest.Params): Promise<UpdateGuest.Result> {
     this.params = params
+    return this.result
+  }
+}
+
+export class DeleteGuestSpy implements DeleteGuest {
+  result = true
+  guestId = ''
+  async delete (guestId: string): Promise<boolean> {
+    this.guestId = guestId
     return this.result
   }
 }

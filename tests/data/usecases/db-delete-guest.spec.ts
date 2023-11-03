@@ -37,4 +37,13 @@ describe('DbUpdateGuest usecase', () => {
     const isValid = await sut.delete(guestId)
     expect(isValid).toBe(false)
   })
+
+  test('should throw if DeleteGuestRepository throws', async () => {
+    const { sut, deleteGuestRepositorySpy } = makeSut()
+    jest.spyOn(deleteGuestRepositorySpy, 'delete').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.delete(guestId)
+    await expect(promise).rejects.toThrow()
+  })
 })

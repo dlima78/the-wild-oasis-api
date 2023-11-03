@@ -1,7 +1,7 @@
 import { DeleteGuestController } from '@/presentation/controllers'
 import { DeleteGuestSpy } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
-import { forbidden, serverError } from '@/presentation/helpers'
+import { forbidden, noContent, serverError } from '@/presentation/helpers'
 import { InvalidParamError } from '@/presentation/errors'
 
 type SutTypes = {
@@ -44,5 +44,11 @@ describe('DeleteGuest controller', () => {
     })
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('should return 204 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(noContent())
   })
 })

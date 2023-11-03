@@ -24,4 +24,10 @@ describe('DbUpdateGuest usecase', () => {
     await sut.delete(guestId)
     expect(deleteGuestRepositorySpy.guestId).toEqual(guestId)
   })
+
+  test('should return true if DeleteGuestRepository succeeds', async () => {
+    const { sut } = makeSut()
+    const isValid = await sut.delete(guestId)
+    expect(isValid).toBe(true)
+  })
 })

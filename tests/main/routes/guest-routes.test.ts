@@ -118,4 +118,27 @@ describe('Guest Routes', () => {
         .expect(200)
     })
   })
+
+  describe('PATCH/guest/:guestId', () => {
+    test('should return 403 on add guest', async () => {
+      await request(app)
+        .patch('/api/guest/any_id')
+        .expect(403)
+    })
+    test('should return 200 on load guests with valid accessToken', async () => {
+      const accessToken = await mockAccessToken()
+      const res = await guestCollection.insertOne(mockAddGuestParams())
+      await request(app)
+        .patch(`/api/guest/${res.insertedId.toHexString()}`)
+        .send({
+          fullName: 'Update Name',
+          email: 'update@mail.com',
+          nationality: 'update_nationality',
+          countryFlag: 'UP',
+          nationalId: '00'
+        })
+        .set('x-access-token', accessToken)
+        .expect(200)
+    })
+  })
 })

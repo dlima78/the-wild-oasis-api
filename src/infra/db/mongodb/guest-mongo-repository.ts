@@ -1,9 +1,9 @@
-import { type LoadGuestsRepository, type AddGuestRepository, type LoadGuestByIdRepository } from '@/data/protocols'
+import { type LoadGuestsRepository, type AddGuestRepository, type LoadGuestByIdRepository, type UpdateGuestRepository } from '@/data/protocols'
 import { MongoHelper } from './mongo-helper'
 import { type GuestModel } from '@/domain/models'
 import { ObjectId } from 'mongodb'
 
-export class GuestMongoRepository implements AddGuestRepository, LoadGuestsRepository, LoadGuestByIdRepository {
+export class GuestMongoRepository implements AddGuestRepository, LoadGuestsRepository, LoadGuestByIdRepository, UpdateGuestRepository {
   async add (data: AddGuestRepository.Params): Promise<boolean> {
     const guestCollection = MongoHelper.getCollection('guests')
     const result = await guestCollection.insertOne(data)
@@ -20,5 +20,16 @@ export class GuestMongoRepository implements AddGuestRepository, LoadGuestsRepos
     const guestCollection = MongoHelper.getCollection('guests')
     const guestModel = await guestCollection.findOne({ _id: new ObjectId(cabinId) })
     return MongoHelper.map(guestModel)
+  }
+
+  async update (data: UpdateGuestRepository.Params): Promise<UpdateGuestRepository.Result> {
+    const guestCollection = MongoHelper.getCollection('guests')
+    const { guestId, ...dataWithoutId } = data
+    const updatedGuest = await guestCollection.findOneAndUpdate(
+      { _id: new ObjectId(guestId) },
+      { $set: { ...dataWithoutId } },
+      { returnDocument: 'after', upsert: false }
+    )
+    return MongoHelper.map(updatedGuest.value)
   }
 }

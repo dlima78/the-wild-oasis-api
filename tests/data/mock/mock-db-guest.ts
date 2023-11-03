@@ -1,6 +1,6 @@
 import { type UpdateGuest, type AddGuest } from '@/domain/usecases'
 import { mockGuestModel } from '@/tests/domain/mocks'
-import { type UpdateGuestRepository, type LoadGuestByIdRepository, type LoadGuestsRepository } from '../protocols'
+import { type UpdateGuestRepository, type LoadGuestByIdRepository, type LoadGuestsRepository, type DeleteGuestRepository } from '../protocols'
 import { type GuestModel } from '@/domain/models'
 
 export class AddGuestRepositorySpy implements AddGuest {
@@ -48,6 +48,15 @@ export class UpdateGuestRepositorySpy implements UpdateGuestRepository {
   result = mockGuestModel()
   async update (data: UpdateGuest.Params): Promise<GuestModel> {
     this.data = data
+    return this.result
+  }
+}
+
+export class DeleteGuestRepositorySpy implements DeleteGuestRepository {
+  result = true
+  guestId = ''
+  async delete (guestId: string): Promise<boolean> {
+    this.guestId = guestId
     return this.result
   }
 }

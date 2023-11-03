@@ -71,4 +71,28 @@ describe('GuestMongoRepository', () => {
       expect(addGuestModel.nationality).toBe(guest.nationality)
     })
   })
+
+  describe('update()', () => {
+    test('should update guest on success', async () => {
+      const addGuestModel = mockAddGuestParams()
+      const res = await guestCollection.insertOne(addGuestModel)
+      const guestId = res.insertedId.toHexString()
+      const sut = makeSut()
+      const updatedGuest = await sut.update({
+        guestId,
+        fullName: 'updated_name',
+        email: 'update@mail.com',
+        nationality: 'update@mail.com',
+        countryFlag: 'UP',
+        nationalId: '77'
+      })
+
+      expect(updatedGuest).toBeTruthy()
+      expect(updatedGuest.fullName).toBe('updated_name')
+      expect(updatedGuest.email).toBe('update@mail.com')
+      expect(updatedGuest.nationality).toBe('update@mail.com')
+      expect(updatedGuest.countryFlag).toBe('UP')
+      expect(updatedGuest.nationalId).toBe('77')
+    })
+  })
 })

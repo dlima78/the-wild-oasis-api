@@ -2,6 +2,7 @@ import { UpdateGuestController } from '@/presentation/controllers'
 
 import { faker } from '@faker-js/faker'
 import { UpdateGuestSpy } from '@/tests/presentation/mocks'
+import { ok } from '@/presentation/helpers'
 
 const mockRequest = (): UpdateGuestController.Request => ({
   guestId: faker.string.uuid(),
@@ -32,5 +33,11 @@ describe('Update Guest Controller', () => {
     const request = mockRequest()
     await sut.handle(request)
     expect(updateGuestSpy.params).toEqual(request)
+  })
+
+  test('Should returns 200 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(ok(httpResponse.body))
   })
 })

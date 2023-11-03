@@ -2,7 +2,7 @@ import { UpdateGuestController } from '@/presentation/controllers'
 
 import { faker } from '@faker-js/faker'
 import { UpdateGuestSpy } from '@/tests/presentation/mocks'
-import { ok } from '@/presentation/helpers'
+import { ok, serverError } from '@/presentation/helpers'
 
 const mockRequest = (): UpdateGuestController.Request => ({
   guestId: faker.string.uuid(),
@@ -39,5 +39,14 @@ describe('Update Guest Controller', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(ok(httpResponse.body))
+  })
+
+  test('Should return 500 if UpdateGuest throws', async () => {
+    const { sut, updateGuestSpy } = makeSut()
+    jest.spyOn(updateGuestSpy, 'update').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })

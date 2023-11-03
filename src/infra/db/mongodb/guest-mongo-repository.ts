@@ -1,9 +1,9 @@
-import { type LoadGuestsRepository, type AddGuestRepository, type LoadGuestByIdRepository, type UpdateGuestRepository } from '@/data/protocols'
+import { type LoadGuestsRepository, type AddGuestRepository, type LoadGuestByIdRepository, type UpdateGuestRepository, type DeleteGuestRepository } from '@/data/protocols'
 import { MongoHelper } from './mongo-helper'
 import { type GuestModel } from '@/domain/models'
 import { ObjectId } from 'mongodb'
 
-export class GuestMongoRepository implements AddGuestRepository, LoadGuestsRepository, LoadGuestByIdRepository, UpdateGuestRepository {
+export class GuestMongoRepository implements AddGuestRepository, LoadGuestsRepository, LoadGuestByIdRepository, UpdateGuestRepository, DeleteGuestRepository {
   async add (data: AddGuestRepository.Params): Promise<boolean> {
     const guestCollection = MongoHelper.getCollection('guests')
     const result = await guestCollection.insertOne(data)
@@ -31,5 +31,11 @@ export class GuestMongoRepository implements AddGuestRepository, LoadGuestsRepos
       { returnDocument: 'after', upsert: false }
     )
     return MongoHelper.map(updatedGuest.value)
+  }
+
+  async delete (guestId: string): Promise<boolean> {
+    const guestCollection = MongoHelper.getCollection('guests')
+    const result = await guestCollection.deleteOne({ _id: new ObjectId(guestId) })
+    return !!result.deletedCount
   }
 }

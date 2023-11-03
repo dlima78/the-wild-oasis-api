@@ -95,4 +95,22 @@ describe('GuestMongoRepository', () => {
       expect(updatedGuest.nationalId).toBe('77')
     })
   })
+
+  describe('delete()', () => {
+    test('should delete a Guest by id', async () => {
+      const guestParams = mockAddGuestParams()
+      const res = await guestCollection.insertOne(guestParams)
+      const guestId = res.insertedId.toHexString()
+      const sut = makeSut()
+      const guestResult = await sut.delete(guestId)
+      expect(guestResult).toBe(true)
+    })
+
+    test('should return false if there is no Guest', async () => {
+      const guestId = '65423fcd0f68c2f403f10d5f'
+      const sut = makeSut()
+      const guestResult = await sut.delete(guestId)
+      expect(guestResult).toBe(false)
+    })
+  })
 })

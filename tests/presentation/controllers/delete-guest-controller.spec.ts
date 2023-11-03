@@ -1,7 +1,7 @@
 import { DeleteGuestController } from '@/presentation/controllers'
 import { DeleteGuestSpy } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
-import { forbidden } from '@/presentation/helpers'
+import { forbidden, serverError } from '@/presentation/helpers'
 import { InvalidParamError } from '@/presentation/errors'
 
 type SutTypes = {
@@ -35,5 +35,14 @@ describe('DeleteGuest controller', () => {
     deleteGuestSpy.result = false
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(forbidden(new InvalidParamError('guestId')))
+  })
+
+  test('should return 500 if DeleteGuest throws', async () => {
+    const { sut, deleteGuestSpy } = makeSut()
+    jest.spyOn(deleteGuestSpy, 'delete').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })

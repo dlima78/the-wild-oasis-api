@@ -6,6 +6,6 @@ export class DbAddBooking implements AddBooking {
 
   async add (data: AddBooking.Params): Promise<boolean> {
     await this.addBookingRepository.add(data)
-    return false
+    return true
   }
 }

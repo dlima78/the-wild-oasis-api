@@ -36,4 +36,13 @@ describe('DbAddBooking Usecase', () => {
     const isValid = await sut.add(mockAddBookingParams())
     expect(isValid).toBe(false)
   })
+
+  test('should throw if AddBookingRepository throws', async () => {
+    const { sut, addBookingRepositorySpy } = makeSut()
+    jest.spyOn(addBookingRepositorySpy, 'add').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.add(mockAddBookingParams())
+    await expect(promise).rejects.toThrow()
+  })
 })

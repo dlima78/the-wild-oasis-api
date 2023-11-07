@@ -29,4 +29,11 @@ describe('DbAddBooking Usecase', () => {
     const isValid = await sut.add(mockAddBookingParams())
     expect(isValid).toBe(true)
   })
+
+  test('should return false if AddBookingRepository returns false', async () => {
+    const { sut, addBookingRepositorySpy } = makeSut()
+    addBookingRepositorySpy.result = false
+    const isValid = await sut.add(mockAddBookingParams())
+    expect(isValid).toBe(false)
+  })
 })

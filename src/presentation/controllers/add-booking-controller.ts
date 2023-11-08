@@ -1,5 +1,5 @@
 import { type HttpResponse, type Controller, type Validation } from '@/presentation/protocols'
-import { badRequest, noContent } from '../helpers'
+import { badRequest, noContent, serverError } from '../helpers'
 import { type AddBooking } from '@/domain/usecases'
 
 export class AddBookingController implements Controller {
@@ -9,12 +9,16 @@ export class AddBookingController implements Controller {
   ) {}
 
   async handle (request: AddBookingController.Request): Promise<HttpResponse> {
-    const error = this.validation.validate(request)
-    if (error) {
-      return badRequest(error)
+    try {
+      const error = this.validation.validate(request)
+      if (error) {
+        return badRequest(error)
+      }
+      await this.addBooking.add(request)
+      return noContent()
+    } catch (error) {
+      return serverError(error as Error)
     }
-    await this.addBooking.add(request)
-    return noContent()
   }
 }
 

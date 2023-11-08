@@ -1,5 +1,5 @@
 import { AddBookingController } from '@/presentation/controllers'
-import { ValidationSpy } from '@/tests/presentation/mocks'
+import { AddBookingSpy, ValidationSpy } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
 import { badRequest } from '@/presentation/helpers'
 
@@ -21,15 +21,18 @@ const mockRequest = (): AddBookingController.Request => ({
 
 type SutTypes = {
   validationSpy: ValidationSpy
+  addBookingSpy: AddBookingSpy
   sut: AddBookingController
 }
 
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy()
-  const sut = new AddBookingController(validationSpy)
+  const addBookingSpy = new AddBookingSpy()
+  const sut = new AddBookingController(validationSpy, addBookingSpy)
   return {
     sut,
-    validationSpy
+    validationSpy,
+    addBookingSpy
   }
 }
 
@@ -46,5 +49,12 @@ describe('Add Booking Controller', () => {
     validationSpy.error = new Error()
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(badRequest(validationSpy.error))
+  })
+
+  test('should call AddBooking with correct values', async () => {
+    const { sut, addBookingSpy } = makeSut()
+    const request = mockRequest()
+    await sut.handle(request)
+    expect(addBookingSpy.params).toEqual({ ...request })
   })
 })

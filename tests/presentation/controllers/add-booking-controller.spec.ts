@@ -1,7 +1,7 @@
 import { AddBookingController } from '@/presentation/controllers'
 import { AddBookingSpy, ValidationSpy } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
-import { badRequest } from '@/presentation/helpers'
+import { badRequest, noContent } from '@/presentation/helpers'
 
 const mockRequest = (): AddBookingController.Request => ({
   startDate: faker.date.soon(),
@@ -55,6 +55,12 @@ describe('Add Booking Controller', () => {
     const { sut, addBookingSpy } = makeSut()
     const request = mockRequest()
     await sut.handle(request)
-    expect(addBookingSpy.params).toEqual({ ...request })
+    expect(addBookingSpy.params).toEqual(request)
+  })
+
+  test('should return 204 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(noContent())
   })
 })

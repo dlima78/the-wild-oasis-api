@@ -1,7 +1,7 @@
 import { AddBookingController } from '@/presentation/controllers'
 import { AddBookingSpy, ValidationSpy } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
-import { badRequest, noContent } from '@/presentation/helpers'
+import { badRequest, noContent, serverError } from '@/presentation/helpers'
 
 const mockRequest = (): AddBookingController.Request => ({
   startDate: faker.date.soon(),
@@ -62,5 +62,14 @@ describe('Add Booking Controller', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(noContent())
+  })
+
+  test('should return 500 if AddCabin throws', async () => {
+    const { sut, addBookingSpy } = makeSut()
+    jest.spyOn(addBookingSpy, 'add').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })

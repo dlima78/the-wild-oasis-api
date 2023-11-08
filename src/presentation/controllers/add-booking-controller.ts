@@ -1,5 +1,5 @@
 import { type HttpResponse, type Controller, type Validation } from '@/presentation/protocols'
-import { badRequest } from '../helpers'
+import { badRequest, noContent } from '../helpers'
 import { type AddBooking } from '@/domain/usecases'
 
 export class AddBookingController implements Controller {
@@ -14,10 +14,7 @@ export class AddBookingController implements Controller {
       return badRequest(error)
     }
     await this.addBooking.add(request)
-    return {
-      statusCode: 0,
-      body: 0
-    }
+    return noContent()
   }
 }
 

@@ -1,9 +1,9 @@
 import { type BookingModel } from '@/domain/models'
 
 export interface LoadBookingByIdRepository {
-  loadById: (id: string) => Promise<LoadBookingRepository.Result>
+  loadById: (id: string) => Promise<LoadBookingByIdRepository.Result>
 }
 
-export namespace LoadBookingRepository {
+export namespace LoadBookingByIdRepository {
   export type Result = BookingModel
 }

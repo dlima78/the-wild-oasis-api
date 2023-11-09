@@ -1,8 +1,8 @@
-import { type AddBookingRepository } from '@/data/protocols'
+import { type LoadBookingByIdRepository, type AddBookingRepository } from '@/data/protocols'
 import { MongoHelper } from './mongo-helper'
 import { ObjectId } from 'mongodb'
 
-export class BookingMongoRepository implements AddBookingRepository {
+export class BookingMongoRepository implements AddBookingRepository, LoadBookingByIdRepository {
   async add (data: AddBookingRepository.Params): Promise<boolean> {
     const bookingCollection = MongoHelper.getCollection('bookings')
     const { cabinId, userId, ...rest } = data
@@ -11,7 +11,12 @@ export class BookingMongoRepository implements AddBookingRepository {
       userId: new ObjectId(userId),
       ...rest
     })
-
     return bookingResult !== null
+  }
+
+  async loadById (id: string): Promise<LoadBookingByIdRepository.Result> {
+    const bookingCollection = MongoHelper.getCollection('bookings')
+    const booking = await bookingCollection.findOne({ _id: new ObjectId(id) })
+    return MongoHelper.map(booking)
   }
 }

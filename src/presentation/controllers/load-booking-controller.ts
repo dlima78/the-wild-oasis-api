@@ -1,15 +1,13 @@
 import { type LoadBooking } from '@/domain/usecases'
 import { type Controller, type HttpResponse } from '@/presentation/protocols'
+import { ok } from '@/presentation/helpers'
 
 export class LoadBookingController implements Controller {
   constructor (private readonly loadBooking: LoadBooking) {}
 
   async handle (request: LoadBookingController.Request): Promise<HttpResponse> {
-    await this.loadBooking.loadById(request.bookingId)
-    return {
-      statusCode: 0,
-      body: ''
-    }
+    const bookingModel = await this.loadBooking.loadById(request.bookingId)
+    return ok(bookingModel)
   }
 }
 

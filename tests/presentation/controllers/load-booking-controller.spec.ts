@@ -1,6 +1,7 @@
 import { LoadBookingController } from '@/presentation/controllers'
 import { LoadBookingSpy } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
+import { ok } from '@/presentation/helpers'
 
 type SutTypes = {
   loadBookingSpy: LoadBookingSpy
@@ -26,5 +27,11 @@ describe('LoadBooking controller', () => {
     const request = mockRequest()
     await sut.handle(request)
     expect(loadBookingSpy.bookingId).toEqual(request.bookingId)
+  })
+
+  test('should return 200 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(ok(httpResponse.body))
   })
 })

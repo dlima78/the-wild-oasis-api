@@ -5,6 +5,7 @@ import env from '@/main/config/env'
 import { type Collection } from 'mongodb'
 import request from 'supertest'
 import jwt from 'jsonwebtoken'
+import { mockAddBookingParams } from '@/tests/domain/mocks'
 
 let bookingCollection: Collection
 let accountCollection: Collection
@@ -89,6 +90,23 @@ describe('Booking Routes', () => {
           userId: '6539180c4815d039bd002cdc'
         })
         .expect(204)
+    })
+  })
+
+  describe('GET/booking/bookingId', () => {
+    test('should return 403 on add booking', async () => {
+      await request(app)
+        .get('/api/booking/anyId')
+        .expect(403)
+    })
+    test('should return 204 on add booking with valid accessToken', async () => {
+      const accessToken = await mockAccessToken()
+      const bookingParams = mockAddBookingParams()
+      const res = await bookingCollection.insertOne(bookingParams)
+      await request(app)
+        .get(`/api/booking/${res.insertedId.toHexString()}`)
+        .set('x-access-token', accessToken)
+        .expect(200)
     })
   })
 })

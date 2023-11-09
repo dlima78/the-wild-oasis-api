@@ -36,4 +36,10 @@ describe('DbLoadBooking usecase', () => {
     const promise = sut.loadById(id)
     await expect(promise).rejects.toThrow()
   })
+
+  test('should return a Booking on success', async () => {
+    const { sut, loadBookingByIdRepositorySpy } = makeSut()
+    const cabin = await sut.loadById(id)
+    expect(cabin).toEqual(loadBookingByIdRepositorySpy.result)
+  })
 })

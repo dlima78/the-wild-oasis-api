@@ -1,6 +1,6 @@
 import { LoadBookingsController } from '@/presentation/controllers'
 import { LoadBookingsSpy } from '@/tests/presentation/mocks'
-import { ok } from '@/presentation/helpers'
+import { noContent, ok } from '@/presentation/helpers'
 
 type SutTypes = {
   loadBookingsSpy: LoadBookingsSpy
@@ -28,5 +28,12 @@ describe('LoadBookings controller', () => {
     const { sut, loadBookingsSpy } = makeSut()
     const httpResponse = await sut.handle()
     expect(httpResponse).toEqual(ok(loadBookingsSpy.result))
+  })
+
+  test('should return 204 if LoadBookings returns empty', async () => {
+    const { sut, loadBookingsSpy } = makeSut()
+    loadBookingsSpy.result = []
+    const httpResponse = await sut.handle()
+    expect(httpResponse).toEqual(noContent())
   })
 })

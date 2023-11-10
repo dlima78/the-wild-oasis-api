@@ -94,12 +94,12 @@ describe('Booking Routes', () => {
   })
 
   describe('GET/booking/bookingId', () => {
-    test('should return 403 on add booking', async () => {
+    test('should return 403 on load booking', async () => {
       await request(app)
         .get('/api/booking/anyId')
         .expect(403)
     })
-    test('should return 204 on add booking with valid accessToken', async () => {
+    test('should return 204 on load booking with valid accessToken', async () => {
       const accessToken = await mockAccessToken()
       const bookingParams = mockAddBookingParams()
       const res = await bookingCollection.insertOne(bookingParams)
@@ -107,6 +107,31 @@ describe('Booking Routes', () => {
         .get(`/api/booking/${res.insertedId.toHexString()}`)
         .set('x-access-token', accessToken)
         .expect(200)
+    })
+  })
+
+  describe('GET/bookings', () => {
+    test('should return 403 on load bookings', async () => {
+      await request(app)
+        .get('/api/bookings')
+        .expect(403)
+    })
+    test('should return 200 on load bookings with valid accessToken', async () => {
+      const accessToken = await mockAccessToken()
+      const bookingsParams = [mockAddBookingParams(), mockAddBookingParams()]
+      await bookingCollection.insertMany(bookingsParams)
+      await request(app)
+        .get('/api/bookings')
+        .set('x-access-token', accessToken)
+        .expect(200)
+    })
+
+    test('should return 204 on load bookings with valid accessToken', async () => {
+      const accessToken = await mockAccessToken()
+      await request(app)
+        .get('/api/bookings')
+        .set('x-access-token', accessToken)
+        .expect(204)
     })
   })
 })

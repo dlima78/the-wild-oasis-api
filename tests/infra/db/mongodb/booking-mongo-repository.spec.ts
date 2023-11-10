@@ -84,4 +84,19 @@ describe('BookingMongoRepository', () => {
       expect(bookingResult.userId).toBe(booking.userId)
     })
   })
+
+  describe('loadAll', () => {
+    test('should load a Booking by id', async () => {
+      const sut = makeSut()
+      const params = [mockAddBookingParams(), mockAddBookingParams()]
+      await bookingCollection.insertMany(params)
+      const bookingResult = await sut.loadAll()
+      expect(bookingResult[0].id).toBeTruthy()
+      expect(bookingResult[1].id).toBeTruthy()
+      expect(bookingResult[0].cabinId).toBe(params[0].cabinId)
+      expect(bookingResult[1].cabinId).toBe(params[1].cabinId)
+      expect(bookingResult[0].cabinPrice).toBe(params[0].cabinPrice)
+      expect(bookingResult[1].startDate).toStrictEqual(params[1].startDate)
+    })
+  })
 })

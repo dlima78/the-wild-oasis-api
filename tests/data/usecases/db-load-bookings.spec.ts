@@ -22,4 +22,10 @@ describe('DbLoadBookings usecase', () => {
     await sut.load()
     expect(loadSpy).toHaveBeenCalled()
   })
+
+  test('should returns a list of booking on success', async () => {
+    const { sut, loadBookingsRepositorySpy } = makeSut()
+    const booking = await sut.load()
+    expect(loadBookingsRepositorySpy.result).toEqual(booking)
+  })
 })

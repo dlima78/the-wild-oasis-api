@@ -28,4 +28,15 @@ describe('DbLoadBookings usecase', () => {
     const booking = await sut.load()
     expect(loadBookingsRepositorySpy.result).toEqual(booking)
   })
+
+  test('should throw if LoadBookings throws', async () => {
+    const { sut, loadBookingsRepositorySpy } = makeSut()
+    jest
+      .spyOn(loadBookingsRepositorySpy, 'loadAll')
+      .mockImplementationOnce(() => {
+        throw new Error()
+      })
+    const promise = sut.load()
+    await expect(promise).rejects.toThrow()
+  })
 })

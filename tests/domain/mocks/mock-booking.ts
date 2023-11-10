@@ -18,6 +18,11 @@ export const mockBookingModel = (): BookingModel => ({
   cabinId: faker.string.uuid(),
   userId: faker.string.uuid()
 })
+
+export const mockBookingsModel = (): BookingModel[] => ([
+  mockBookingModel(),
+  mockBookingModel()
+])
 export const mockAddBookingParams = (): AddBooking.Params => ({
   startDate: faker.date.recent(),
   endDate: faker.date.future(),

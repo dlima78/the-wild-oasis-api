@@ -1,6 +1,6 @@
-import { type LoadBookingByIdRepository, type AddBookingRepository } from '@/data/protocols'
+import { type LoadBookingByIdRepository, type AddBookingRepository, type LoadBookingsRepository } from '@/data/protocols'
 import { type BookingModel } from '@/domain/models'
-import { mockBookingModel } from '@/tests/domain/mocks'
+import { mockBookingModel, mockBookingsModel } from '@/tests/domain/mocks'
 
 export class AddBookingRepositorySpy implements AddBookingRepository {
   data!: AddBookingRepository.Params
@@ -16,6 +16,13 @@ export class LoadBookingByIdRepositorySpy implements LoadBookingByIdRepository {
   result = mockBookingModel()
   async loadById (id: string): Promise<BookingModel> {
     this.id = id
+    return this.result
+  }
+}
+
+export class LoadBookingsRepositorySpy implements LoadBookingsRepository {
+  result = mockBookingsModel()
+  async loadAll (): Promise<LoadBookingsRepository.Result> {
     return this.result
   }
 }

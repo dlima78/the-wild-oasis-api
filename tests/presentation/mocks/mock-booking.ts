@@ -1,5 +1,5 @@
-import { type LoadBooking, type AddBooking } from '@/domain/usecases'
-import { mockBookingModel } from '@/tests/domain/mocks'
+import { type LoadBooking, type AddBooking, type LoadBookings } from '@/domain/usecases'
+import { mockBookingModel, mockBookingsModel } from '@/tests/domain/mocks'
 
 export class AddBookingSpy implements AddBooking {
   params!: AddBooking.Params
@@ -17,6 +17,13 @@ export class LoadBookingSpy implements LoadBooking {
   bookingId = ''
   async loadById (bookingId: string): Promise<LoadBooking.Result> {
     this.bookingId = bookingId
+    return this.result
+  }
+}
+
+export class LoadBookingsSpy implements LoadBookings {
+  result = mockBookingsModel()
+  async load (): Promise<LoadBookings.Result> {
     return this.result
   }
 }

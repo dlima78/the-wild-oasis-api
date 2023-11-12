@@ -32,4 +32,10 @@ describe('DbUpdateBooking', () => {
     const promise = sut.update(mockUpdateBookingParams())
     await expect(promise).rejects.toThrow()
   })
+
+  test('should return UpdateResult on success', async () => {
+    const { sut, updateBookingRepositorySpy } = makeSut()
+    const updateResult = await sut.update(mockUpdateBookingParams())
+    expect(updateResult).toEqual(updateBookingRepositorySpy.result)
+  })
 })

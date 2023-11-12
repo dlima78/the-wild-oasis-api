@@ -1,5 +1,6 @@
 import { BookingMongoRepository, MongoHelper } from '@/infra/db'
 import { mockAddBookingParams, mockAddCabinParams, mockAddGuestParams } from '@/tests/domain/mocks'
+
 import { ObjectId, type Collection } from 'mongodb'
 
 let bookingCollection: Collection
@@ -97,6 +98,45 @@ describe('BookingMongoRepository', () => {
       expect(bookingResult[1].cabinId).toBe(params[1].cabinId)
       expect(bookingResult[0].cabinPrice).toBe(params[0].cabinPrice)
       expect(bookingResult[1].startDate).toStrictEqual(params[1].startDate)
+    })
+  })
+
+  describe('update', () => {
+    test('should update Booking', async () => {
+      const booking = mockAddBookingParams()
+      const res = await bookingCollection.insertOne(booking)
+      const bookingId = res.insertedId.toHexString()
+      const sut = makeSut()
+      const updateBooking = await sut.update({
+        bookingId,
+        startDate: booking.startDate,
+        endDate: booking.endDate,
+        numNight: 12,
+        mumGuest: 20,
+        cabinPrice: 158,
+        extraPrice: 50,
+        totalPrice: 258,
+        status: booking.status,
+        hasBreakfast: booking.hasBreakfast,
+        isPaid: booking.isPaid,
+        observations: booking.observations,
+        cabinId: booking.cabinId,
+        userId: booking.userId
+      })
+      expect(updateBooking).toBeTruthy()
+      expect(updateBooking.cabinId).toBe(booking.cabinId)
+      expect(updateBooking.cabinPrice).toBe(158)
+      expect(updateBooking.startDate).toStrictEqual(booking.startDate)
+      expect(updateBooking.endDate).toStrictEqual(booking.endDate)
+      expect(updateBooking.extraPrice).toBe(50)
+      expect(updateBooking.hasBreakfast).toBe(booking.hasBreakfast)
+      expect(updateBooking.isPaid).toBe(booking.isPaid)
+      expect(updateBooking.mumGuest).toBe(20)
+      expect(updateBooking.numNight).toBe(12)
+      expect(updateBooking.observations).toBe(booking.observations)
+      expect(updateBooking.status).toBe(booking.status)
+      expect(updateBooking.totalPrice).toBe(258)
+      expect(updateBooking.userId).toBe(booking.userId)
     })
   })
 })

@@ -1,8 +1,8 @@
-import { type LoadBookingByIdRepository, type AddBookingRepository, type LoadBookingsRepository } from '@/data/protocols'
+import { type LoadBookingByIdRepository, type AddBookingRepository, type LoadBookingsRepository, type UpdateBookingRepository } from '@/data/protocols'
 import { MongoHelper } from './mongo-helper'
 import { ObjectId } from 'mongodb'
 
-export class BookingMongoRepository implements AddBookingRepository, LoadBookingByIdRepository, LoadBookingsRepository {
+export class BookingMongoRepository implements AddBookingRepository, LoadBookingByIdRepository, LoadBookingsRepository, UpdateBookingRepository {
   async add (data: AddBookingRepository.Params): Promise<boolean> {
     const bookingCollection = MongoHelper.getCollection('bookings')
     const { cabinId, userId, ...rest } = data
@@ -24,5 +24,20 @@ export class BookingMongoRepository implements AddBookingRepository, LoadBooking
     const bookingCollection = MongoHelper.getCollection('bookings')
     const bookingsResult = await bookingCollection.find({}).toArray()
     return MongoHelper.mapCollection(bookingsResult)
+  }
+
+  async update (
+    data: UpdateBookingRepository.Params
+  ): Promise<UpdateBookingRepository.Result> {
+    const bookingCollection = MongoHelper.getCollection('bookings')
+    console.log(data)
+    const { bookingId, ...dataWithoutId } = data
+    console.log(dataWithoutId)
+    const updatedBooking = await bookingCollection.findOneAndUpdate(
+      { _id: new ObjectId(bookingId) },
+      { $set: { ...dataWithoutId } },
+      { returnDocument: 'after', upsert: false }
+    )
+    return MongoHelper.map(updatedBooking.value)
   }
 }

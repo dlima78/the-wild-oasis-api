@@ -23,4 +23,13 @@ describe('DbUpdateBooking', () => {
     await sut.update(bookingData)
     expect(updateBookingRepositorySpy.data).toEqual(bookingData)
   })
+
+  test('should throw if UpdateBookingRepository throws', async () => {
+    const { sut, updateBookingRepositorySpy } = makeSut()
+    jest.spyOn(updateBookingRepositorySpy, 'update').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.update(mockUpdateBookingParams())
+    await expect(promise).rejects.toThrow()
+  })
 })

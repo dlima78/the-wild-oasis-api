@@ -30,9 +30,7 @@ export class BookingMongoRepository implements AddBookingRepository, LoadBooking
     data: UpdateBookingRepository.Params
   ): Promise<UpdateBookingRepository.Result> {
     const bookingCollection = MongoHelper.getCollection('bookings')
-    console.log(data)
     const { bookingId, ...dataWithoutId } = data
-    console.log(dataWithoutId)
     const updatedBooking = await bookingCollection.findOneAndUpdate(
       { _id: new ObjectId(bookingId) },
       { $set: { ...dataWithoutId } },

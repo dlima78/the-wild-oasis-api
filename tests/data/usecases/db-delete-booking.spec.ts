@@ -37,4 +37,13 @@ describe('DbUpdateBooking', () => {
     const isValid = await sut.delete(bookingId)
     expect(isValid).toBe(true)
   })
+
+  test('should throw if DeleteBookingRepository throws', async () => {
+    const { sut, deleteBookingRepositorySpy } = makeSut()
+    jest.spyOn(deleteBookingRepositorySpy, 'delete').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.delete(bookingId)
+    await expect(promise).rejects.toThrow()
+  })
 })

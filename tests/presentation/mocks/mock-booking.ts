@@ -1,4 +1,4 @@
-import { type LoadBooking, type AddBooking, type LoadBookings } from '@/domain/usecases'
+import { type LoadBooking, type AddBooking, type LoadBookings, type UpdateBooking } from '@/domain/usecases'
 import { mockBookingModel, mockBookingsModel } from '@/tests/domain/mocks'
 
 export class AddBookingSpy implements AddBooking {
@@ -24,6 +24,16 @@ export class LoadBookingSpy implements LoadBooking {
 export class LoadBookingsSpy implements LoadBookings {
   result = mockBookingsModel()
   async load (): Promise<LoadBookings.Result> {
+    return this.result
+  }
+}
+
+export class UpdateBookingSpy implements UpdateBooking {
+  params!: UpdateBooking.Params
+
+  result = mockBookingModel()
+  async update (params: UpdateBooking.Params): Promise<UpdateBooking.Result> {
+    this.params = params
     return this.result
   }
 }

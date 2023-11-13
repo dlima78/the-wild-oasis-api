@@ -1,15 +1,13 @@
 import { type UpdateBooking } from '@/domain/usecases'
 import { type Controller, type HttpResponse } from '@/presentation/protocols'
+import { ok } from '../helpers'
 
 export class UpdateBookingController implements Controller {
   constructor (private readonly updateBooking: UpdateBooking) {}
 
   async handle (request: UpdateBookingController.Request): Promise<HttpResponse> {
-    await this.updateBooking.update(request)
-    return {
-      statusCode: 0,
-      body: ''
-    }
+    const updateBooking = await this.updateBooking.update(request)
+    return ok(updateBooking)
   }
 }
 

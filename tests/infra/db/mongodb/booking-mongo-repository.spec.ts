@@ -139,4 +139,22 @@ describe('BookingMongoRepository', () => {
       expect(updateBooking.userId).toBe(booking.userId)
     })
   })
+
+  describe('delete()', () => {
+    test('should delete a Booking', async () => {
+      const booking = mockAddBookingParams()
+      const res = await bookingCollection.insertOne(booking)
+      const bookingId = res.insertedId.toHexString()
+      const sut = makeSut()
+      const bookingResult = await sut.delete(bookingId)
+      expect(bookingResult).toBe(true)
+    })
+
+    test('should return false with invalid bookingId', async () => {
+      const bookingId = '65423fcd0f68c2f403f10d5f'
+      const sut = makeSut()
+      const bookingResult = await sut.delete(bookingId)
+      expect(bookingResult).toBe(false)
+    })
+  })
 })

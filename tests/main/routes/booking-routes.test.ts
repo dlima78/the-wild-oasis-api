@@ -154,4 +154,20 @@ describe('Booking Routes', () => {
         .expect(200)
     })
   })
+
+  describe('DELETE/booking/:bookingId', () => {
+    test('Should return 204 on delete booking with valid accessToken ', async () => {
+      const accessToken = await mockAccessToken()
+      const bookingParams = mockAddBookingParams()
+      const res = await bookingCollection.insertOne(bookingParams)
+      await request(app)
+        .delete(`/api/booking/${res.insertedId.toHexString()}`)
+        .set('x-access-token', accessToken)
+        .expect(204)
+    })
+
+    test('should return 403 on delete booking without accessToken', async () => {
+      await request(app).delete('/api/booking/anyId').expect(403)
+    })
+  })
 })

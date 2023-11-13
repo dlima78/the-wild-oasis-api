@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker'
 import { UpdateBookingController } from '@/presentation/controllers'
 
 import { UpdateBookingSpy } from '@/tests/presentation/mocks'
+import { ok } from '@/presentation/helpers'
 
 const mockRequest = (): UpdateBookingController.Request => ({
   bookingId: faker.string.uuid(),
@@ -40,5 +41,11 @@ describe('Update Booking Controller', () => {
     const request = mockRequest()
     await sut.handle(request)
     expect(updateBookingSpy.params).toEqual(request)
+  })
+
+  test('Should return 200 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(ok(httpResponse.body))
   })
 })

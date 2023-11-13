@@ -31,4 +31,10 @@ describe('DbUpdateBooking', () => {
     const isValid = await sut.delete(bookingId)
     expect(isValid).toBe(false)
   })
+
+  test('should return true if DeleteBookingRepository returns true', async () => {
+    const { sut } = makeSut()
+    const isValid = await sut.delete(bookingId)
+    expect(isValid).toBe(true)
+  })
 })

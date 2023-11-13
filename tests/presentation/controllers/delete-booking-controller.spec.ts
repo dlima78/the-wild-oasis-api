@@ -2,7 +2,7 @@ import { DeleteBookingController } from '@/presentation/controllers'
 import { DeleteBookingSpy } from '@/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
 import { InvalidParamError } from '@/presentation/errors'
-import { forbidden } from '@/presentation/helpers'
+import { forbidden, noContent } from '@/presentation/helpers'
 
 type SutTypes = {
   deleteBookingSpy: DeleteBookingSpy
@@ -35,5 +35,11 @@ describe('DeleteBooking controller', () => {
     deleteBookingSpy.result = false
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(forbidden(new InvalidParamError('bookingId')))
+  })
+
+  test('should return 204 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(noContent())
   })
 })

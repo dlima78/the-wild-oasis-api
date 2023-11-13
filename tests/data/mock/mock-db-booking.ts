@@ -1,4 +1,4 @@
-import { type LoadBookingByIdRepository, type AddBookingRepository, type LoadBookingsRepository, type UpdateBookingRepository } from '@/data/protocols'
+import { type LoadBookingByIdRepository, type AddBookingRepository, type LoadBookingsRepository, type UpdateBookingRepository, type DeleteBookingRepository } from '@/data/protocols'
 import { type BookingModel } from '@/domain/models'
 import { mockBookingModel, mockBookingsModel } from '@/tests/domain/mocks'
 
@@ -32,6 +32,15 @@ export class UpdateBookingRepositorySpy implements UpdateBookingRepository {
   result = mockBookingModel()
   async update (data: UpdateBookingRepository.Params): Promise<UpdateBookingRepository.Result> {
     this.data = data
+    return this.result
+  }
+}
+
+export class DeleteBookingRepositorySpy implements DeleteBookingRepository {
+  bookingId = ''
+  result = true
+  async delete (bookingId: string): Promise<boolean> {
+    this.bookingId = bookingId
     return this.result
   }
 }

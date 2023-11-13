@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 import { UpdateBookingController } from '@/presentation/controllers'
 
 import { UpdateBookingSpy } from '@/tests/presentation/mocks'
-import { ok } from '@/presentation/helpers'
+import { ok, serverError } from '@/presentation/helpers'
 
 const mockRequest = (): UpdateBookingController.Request => ({
   bookingId: faker.string.uuid(),
@@ -47,5 +47,14 @@ describe('Update Booking Controller', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(ok(httpResponse.body))
+  })
+
+  test('Should return 500 if UpdateCabin throws', async () => {
+    const { sut, updateBookingSpy } = makeSut()
+    jest.spyOn(updateBookingSpy, 'update').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })

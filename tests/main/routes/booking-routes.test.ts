@@ -134,4 +134,24 @@ describe('Booking Routes', () => {
         .expect(204)
     })
   })
+
+  describe('Patch/booking/bookingId', () => {
+    test('should return 403 on update booking', async () => {
+      await request(app)
+        .patch('/api/booking/anyId')
+        .expect(403)
+    })
+    test('should return 200 on update booking with valid accessToken', async () => {
+      const accessToken = await mockAccessToken()
+      const bookingParams = mockAddBookingParams()
+      const res = await bookingCollection.insertOne(bookingParams)
+      await request(app)
+        .patch(`/api/booking/${res.insertedId.toHexString()}`)
+        .set('x-access-token', accessToken)
+        .send({
+          numNight: 7
+        })
+        .expect(200)
+    })
+  })
 })

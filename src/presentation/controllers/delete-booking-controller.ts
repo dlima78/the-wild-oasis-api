@@ -1,6 +1,6 @@
 import { type DeleteBooking } from '@/domain/usecases'
 import { type Controller, type HttpResponse } from '@/presentation/protocols'
-import { forbidden } from '@/presentation/helpers'
+import { forbidden, noContent } from '@/presentation/helpers'
 import { InvalidParamError } from '@/presentation/errors'
 
 export class DeleteBookingController implements Controller {
@@ -11,10 +11,7 @@ export class DeleteBookingController implements Controller {
     if (!isDeleted) {
       return forbidden(new InvalidParamError('bookingId'))
     }
-    return {
-      statusCode: 0,
-      body: ''
-    }
+    return noContent()
   }
 }
 
